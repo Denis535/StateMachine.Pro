@@ -45,7 +45,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
     // Activate
     private void Activate(object? argument) {
-        Assert.Operation.Message( $"Node {this} must be inactive" ).Valid( State is State_.Inactive );
+        Assert.Operation.Message( $"State {this} must be inactive" ).Valid( State is State_.Inactive );
         OnBeforeActivateEvent?.Invoke( argument );
         OnBeforeActivate( argument );
         {
@@ -57,7 +57,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
         OnAfterActivateEvent?.Invoke( argument );
     }
     private void Deactivate(object? argument) {
-        Assert.Operation.Message( $"Node {this} must be active" ).Valid( State is State_.Active );
+        Assert.Operation.Message( $"State {this} must be active" ).Valid( State is State_.Active );
         OnBeforeDeactivateEvent?.Invoke( argument );
         OnBeforeDeactivate( argument );
         {
