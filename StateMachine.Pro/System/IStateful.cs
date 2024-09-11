@@ -16,14 +16,13 @@ public interface IStateful<T> : IStateful where T : StateBase<T> {
     // Helpers
     protected static void SetState(IStateful<T> stateful, T? state, object? argument) {
         Assert.Argument.Message( $"Argument 'state' ({state}) must be valid" ).Valid( state != stateful.State );
-        if (state != null) {
-            Assert.Operation.Message( $"Stateful {stateful} must have no state" ).Valid( stateful.State == null );
-            stateful.State = state;
-            stateful.State.Activate( stateful, argument );
-        } else {
-            Assert.Operation.Message( $"Stateful {stateful} must have state" ).Valid( stateful.State != null );
+        if (stateful.State != null) {
             stateful.State.Deactivate( stateful, argument );
             stateful.State = null;
+        }
+        if (state != null) {
+            stateful.State = state;
+            stateful.State.Activate( stateful, argument );
         }
     }
 
