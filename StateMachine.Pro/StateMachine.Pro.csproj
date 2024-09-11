@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <RootNamespace/>
+
+        <!--Assembly attributes-->
+        <Version>1.0.0</Version>
+        <Description>The library for implementation of stateable structure</Description>
+        <Authors>Denis535</Authors>
+        <Company>Denis535</Company>
+        <Product>$(AssemblyName)</Product>
+        <Copyright></Copyright>
+        <RepositoryUrl>https://github.com/Denis535/StateMachine.Pro</RepositoryUrl>
+
+        <!--Package attributes-->
+        <IsPackable>true</IsPackable>
+        <Title>StateMachine.Pro</Title>
+        <PackageId>$(AssemblyName)</PackageId>
+        <PackageVersion>$(Version)</PackageVersion>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>Icon.png</PackageIcon>
+        <PackageIconUrl></PackageIconUrl>
+        <PackageDescription>$(Description)</PackageDescription>
+        <PackageProjectUrl>https://github.com/Denis535/StateMachine.Pro</PackageProjectUrl>
+        <PackageTags>state machine</PackageTags>
+
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageLicenseUrl></PackageLicenseUrl>
+        <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+
+        <IsTool>false</IsTool>
+        <DevelopmentDependency>false</DevelopmentDependency>
+
+        <!--Pack options-->
+        <PackRelease>true</PackRelease>
+
+        <EnableDefaultItems>true</EnableDefaultItems>
+        <EnableDefaultNoneItems>true</EnableDefaultNoneItems>
+        <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+        <EnableDefaultEmbeddedResourceItems>true</EnableDefaultEmbeddedResourceItems>
+
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <IncludeContentInPack>true</IncludeContentInPack>
+        <IncludeSymbols>false</IncludeSymbols>
+        <IncludeSource>false</IncludeSource>
+
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeBuilds</TargetsForTfmSpecificBuildOutput>
+        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeContent</TargetsForTfmSpecificContentInPackage>
+    </PropertyGroup>
+
+    <!--Clean-->
+    <ItemGroup>
+        <Clean Include="$(PackageOutputPath)\*.nupkg" />
+    </ItemGroup>
+
+    <!--PackageReference-->
+    <ItemGroup>
+        <PackageReference Include="Assert.Kind.Message.Condition" Version="1.0.6" />
+    </ItemGroup>
+
+    <!--Include Builds-->
+    <Target Name="IncludeBuilds">
+        <ItemGroup>
+        </ItemGroup>
+    </Target>
+
+    <!--Include Content-->
+    <Target Name="IncludeContent">
+        <ItemGroup>
+            <TfmSpecificPackageFile Include="../Readme.md" PackagePath="/" />
+            <TfmSpecificPackageFile Include="../Icon.png" PackagePath="/" />
+            <TfmSpecificPackageFile Include="../LICENSE" PackagePath="/" />
+        </ItemGroup>
+    </Target>
+
+</Project>
