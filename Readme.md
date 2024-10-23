@@ -1,5 +1,5 @@
 # Overview
-The library for implementation of stateful object.
+The library that helps you implement the state pattern i.e. stateful object.
 
 # Reference
 ```
@@ -22,21 +22,16 @@ public abstract class StateBase {
 }
 public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
-    // State
     public State_ State { get; }
-    // Owner
-    public IStateful<T>? Owner { get; }
-    // OnActivate
+    public IStateful<T>? Stateful { get; }
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
     public event Action<object?>? OnBeforeDeactivateEvent;
     public event Action<object?>? OnAfterDeactivateEvent;
 
-    // Constructor
-    public StateBase() {
-    }
+    public StateBase();
+    protected virtual void AutoDispose();
 
-    // OnActivate
     protected virtual void OnBeforeActivate(object? argument);
     protected abstract void OnActivate(object? argument);
     protected virtual void OnAfterActivate(object? argument);

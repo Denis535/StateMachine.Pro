@@ -21,7 +21,9 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     // State
     public State_ State { get; private set; } = State_.Inactive;
     // Owner
-    public IStateful<T>? Owner { get; private set; }
+    private IStateful<T>? Owner { get; set; }
+    // Stateful
+    public IStateful<T>? Stateful => Owner;
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
@@ -30,6 +32,8 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
     // Constructor
     public StateBase() {
+    }
+    protected virtual void AutoDispose() {
     }
 
     // Activate
@@ -67,6 +71,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
         }
         OnAfterDeactivate( argument );
         OnAfterDeactivateEvent?.Invoke( argument );
+        AutoDispose();
     }
 
     // OnActivate
