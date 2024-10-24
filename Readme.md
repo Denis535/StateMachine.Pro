@@ -1,5 +1,5 @@
 # Overview
-The library that helps you implement the state pattern i.e. stateful object.
+The library that helps you implement the state pattern, i.e. a stateful object.
 
 # Reference
 ```
@@ -30,7 +30,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     public event Action<object?>? OnAfterDeactivateEvent;
 
     public StateBase();
-    protected virtual void AutoDispose();
+    protected virtual void DisposeWhenDeactivate();
 
     protected virtual void OnBeforeActivate(object? argument);
     protected abstract void OnActivate(object? argument);

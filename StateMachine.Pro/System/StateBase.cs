@@ -33,7 +33,8 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     // Constructor
     public StateBase() {
     }
-    protected virtual void AutoDispose() {
+    protected virtual void DisposeWhenDeactivate() {
+        (this as IDisposable)?.Dispose();
     }
 
     // Activate
@@ -71,7 +72,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
         }
         OnAfterDeactivate( argument );
         OnAfterDeactivateEvent?.Invoke( argument );
-        AutoDispose();
+        DisposeWhenDeactivate();
     }
 
     // OnActivate
