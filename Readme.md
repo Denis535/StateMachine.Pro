@@ -19,11 +19,15 @@ public abstract class StateBase {
         Active,
         Deactivating,
     }
-}
-public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
     public State_ State { get; }
-    public IStateful<T>? Stateful { get; }
+    public IStateful? Stateful { get; }
+
+}
+public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis> {
+
+    public new IStateful<TThis>? Stateful { get; }
+
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
     public event Action<object?>? OnBeforeDeactivateEvent;
@@ -39,37 +43,5 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     protected abstract void OnDeactivate(object? argument);
     protected virtual void OnAfterDeactivate(object? argument);
 
-}
-```
-
-# Example
-```
-internal class Stateful : StatefulBase<StateBase2>, IDisposable {
-
-    public Stateful() {
-        SetState( null );
-        SetState( new A_State() );
-        SetState( new A_State() );
-        SetState( new B_State() );
-        SetState( null );
-    }
-    public void Dispose() {
-        SetState( null );
-    }
-
-}
-internal abstract class StateBase2 : StateBase<StateBase2> {
-
-    protected override void OnActivate(object? argument) {
-        TestContext.WriteLine( "OnActivate: " + GetType().Name );
-    }
-    protected override void OnDeactivate(object? argument) {
-        TestContext.WriteLine( "OnDeactivate: " + GetType().Name );
-    }
-
-}
-internal class A_State : StateBase2 {
-}
-internal class B_State : StateBase2 {
 }
 ```
