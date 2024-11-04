@@ -23,10 +23,10 @@ public abstract class StateBase {
     }
 
 }
-public abstract class StateBase<T> : StateBase where T : StateBase<T> {
+public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis> {
 
     // Stateful
-    public new IStateful<T>? Stateful => (IStateful<T>?) base.Stateful;
+    public new IStateful<TThis>? Stateful => (IStateful<TThis>?) base.Stateful;
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
@@ -41,13 +41,13 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     }
 
     // Activate
-    internal void Activate(IStateful<T> owner, object? argument) {
+    internal void Activate(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( State is State_.Inactive );
         Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
         Owner = owner;
         Activate( argument );
     }
-    internal void Deactivate(IStateful<T> owner, object? argument) {
+    internal void Deactivate(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must be active" ).Valid( State is State_.Active );
         Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
         Deactivate( argument );
@@ -57,27 +57,31 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     // Activate
     private void Activate(object? argument) {
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( State is State_.Inactive );
-        OnBeforeActivateEvent?.Invoke( argument );
-        OnBeforeActivate( argument );
         {
-            State = State_.Activating;
-            OnActivate( argument );
-            State = State_.Active;
+            OnBeforeActivateEvent?.Invoke( argument );
+            OnBeforeActivate( argument );
+            {
+                State = State_.Activating;
+                OnActivate( argument );
+                State = State_.Active;
+            }
+            OnAfterActivate( argument );
+            OnAfterActivateEvent?.Invoke( argument );
         }
-        OnAfterActivate( argument );
-        OnAfterActivateEvent?.Invoke( argument );
     }
     private void Deactivate(object? argument) {
         Assert.Operation.Message( $"State {this} must be active" ).Valid( State is State_.Active );
-        OnBeforeDeactivateEvent?.Invoke( argument );
-        OnBeforeDeactivate( argument );
         {
-            State = State_.Deactivating;
-            OnDeactivate( argument );
-            State = State_.Inactive;
+            OnBeforeDeactivateEvent?.Invoke( argument );
+            OnBeforeDeactivate( argument );
+            {
+                State = State_.Deactivating;
+                OnDeactivate( argument );
+                State = State_.Inactive;
+            }
+            OnAfterDeactivate( argument );
+            OnAfterDeactivateEvent?.Invoke( argument );
         }
-        OnAfterDeactivate( argument );
-        OnAfterDeactivateEvent?.Invoke( argument );
         DisposeWhenDeactivate();
     }
 
