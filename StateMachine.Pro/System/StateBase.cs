@@ -43,6 +43,7 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
     // Activate
     internal void Activate(IStateful<T> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( State is State_.Inactive );
+        Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
         Owner = owner;
         Activate( argument );
     }
