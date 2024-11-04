@@ -15,6 +15,8 @@ public class Stateful<T> : IStateful<T> where T : StateBase<T> {
     }
 
     // SetState
+    void IStateful<T>.SetState(T? state, object? argument) => SetState( state, argument );
+    // SetState
     public virtual void SetState(T? state, object? argument = null) {
         IStateful<T>.SetState( this, state, argument );
     }

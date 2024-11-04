@@ -11,6 +11,13 @@ public abstract class StateBase {
         Deactivating,
     }
 
+    // State
+    public State_ State { get; private protected set; } = State_.Inactive;
+    // Owner
+    private protected IStateful? Owner { get; set; }
+    // Stateful
+    public IStateful? Stateful => Owner;
+
     // Constructor
     internal StateBase() {
     }
@@ -18,12 +25,8 @@ public abstract class StateBase {
 }
 public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
-    // State
-    public State_ State { get; private set; } = State_.Inactive;
-    // Owner
-    private IStateful<T>? Owner { get; set; }
     // Stateful
-    public IStateful<T>? Stateful => Owner;
+    public new IStateful<T>? Stateful => (IStateful<T>?) base.Stateful;
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
