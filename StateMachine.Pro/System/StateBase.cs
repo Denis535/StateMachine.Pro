@@ -42,11 +42,13 @@ public abstract class StateBase<T> : StateBase where T : StateBase<T> {
 
     // Activate
     internal void Activate(IStateful<T> owner, object? argument) {
+        Assert.Operation.Message( $"State {this} must be inactive" ).Valid( State is State_.Inactive );
         Owner = owner;
         Activate( argument );
     }
     internal void Deactivate(IStateful<T> owner, object? argument) {
-        Assert.Argument.Message( $"Argument 'owner' ({owner}) must be valid" ).Valid( owner == Owner );
+        Assert.Operation.Message( $"State {this} must be active" ).Valid( State is State_.Active );
+        Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
         Deactivate( argument );
         Owner = null;
     }
