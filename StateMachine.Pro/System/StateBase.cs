@@ -40,14 +40,14 @@ public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis
         (this as IDisposable)?.Dispose();
     }
 
-    // Activate
-    internal void Activate(IStateful<TThis> owner, object? argument) {
+    // SetOwner
+    internal void SetOwner(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
         Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
         Owner = owner;
         Activate( argument );
     }
-    internal void Deactivate(IStateful<TThis> owner, object? argument) {
+    internal void RemoveOwner(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
         Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
         Deactivate( argument );
