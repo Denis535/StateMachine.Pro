@@ -13,14 +13,14 @@ public interface IStateful<T> : IStateful where T : StateBase<T> {
 
 }
 public abstract class StateBase {
-    public enum State_ {
+    public enum Activity_ {
         Inactive,
         Activating,
         Active,
         Deactivating,
     }
 
-    public State_ State { get; }
+    public Activity_ Activity { get; }
     public IStateful? Stateful { get; }
 
 }
