@@ -1,5 +1,5 @@
 # Overview
-The library that helps you implement the state pattern, i.e. a stateful object.
+The library that helps you implement a stateful object, i.e. state pattern.
 
 # Reference
 ```
