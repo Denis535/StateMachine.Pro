@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-public abstract class StateBase {
+public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     public enum Activity_ {
         Inactive,
         Activating,
@@ -12,21 +12,11 @@ public abstract class StateBase {
     }
 
     // Activity
-    public Activity_ Activity { get; private protected set; } = Activity_.Inactive;
+    public Activity_ Activity { get; private set; } = Activity_.Inactive;
     // Owner
-    private protected IStateful? Owner { get; set; }
+    private IStateful<TThis>? Owner { get; set; }
     // Stateful
-    public IStateful? Stateful => Owner;
-
-    // Constructor
-    internal StateBase() {
-    }
-
-}
-public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis> {
-
-    // Stateful
-    public new IStateful<TThis>? Stateful => (IStateful<TThis>?) base.Stateful;
+    public IStateful<TThis>? Stateful => Owner;
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
@@ -57,32 +47,42 @@ public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis
     // Activate
     private void Activate(object? argument) {
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+        BeforeActivate( argument );
+        Activity = Activity_.Activating;
         {
-            OnBeforeActivateEvent?.Invoke( argument );
-            OnBeforeActivate( argument );
-            {
-                Activity = Activity_.Activating;
-                OnActivate( argument );
-                Activity = Activity_.Active;
-            }
-            OnAfterActivate( argument );
-            OnAfterActivateEvent?.Invoke( argument );
+            OnActivate( argument );
         }
+        Activity = Activity_.Active;
+        AfterActivate( argument );
     }
     private void Deactivate(object? argument) {
         Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+        BeforeDeactivate( argument );
+        Activity = Activity_.Deactivating;
         {
-            OnBeforeDeactivateEvent?.Invoke( argument );
-            OnBeforeDeactivate( argument );
-            {
-                Activity = Activity_.Deactivating;
-                OnDeactivate( argument );
-                Activity = Activity_.Inactive;
-            }
-            OnAfterDeactivate( argument );
-            OnAfterDeactivateEvent?.Invoke( argument );
+            OnDeactivate( argument );
         }
+        Activity = Activity_.Inactive;
+        AfterDeactivate( argument );
         DisposeWhenDeactivate();
+    }
+
+    // Activate
+    private void BeforeActivate(object? argument) {
+        OnBeforeActivateEvent?.Invoke( argument );
+        OnBeforeActivate( argument );
+    }
+    private void AfterActivate(object? argument) {
+        OnAfterActivate( argument );
+        OnAfterActivateEvent?.Invoke( argument );
+    }
+    private void BeforeDeactivate(object? argument) {
+        OnBeforeDeactivateEvent?.Invoke( argument );
+        OnBeforeDeactivate( argument );
+    }
+    private void AfterDeactivate(object? argument) {
+        OnAfterDeactivate( argument );
+        OnAfterDeactivateEvent?.Invoke( argument );
     }
 
     // OnActivate

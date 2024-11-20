@@ -3,16 +3,14 @@ The library that helps you implement the state pattern, i.e. a stateful object.
 
 # Reference
 ```
-public interface IStateful {
-}
-public interface IStateful<T> : IStateful where T : StateBase<T> {
+public interface IStateful<T> where T : StateBase<T> {
 
     protected T? State { get; set; }
 
     protected internal void SetState(T? state, object? argument = null);
 
 }
-public abstract class StateBase {
+public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     public enum Activity_ {
         Inactive,
         Activating,
@@ -21,11 +19,6 @@ public abstract class StateBase {
     }
 
     public Activity_ Activity { get; }
-    public IStateful? Stateful { get; }
-
-}
-public abstract class StateBase<TThis> : StateBase where TThis : StateBase<TThis> {
-
     public new IStateful<TThis>? Stateful { get; }
 
     public event Action<object?>? OnBeforeActivateEvent;
