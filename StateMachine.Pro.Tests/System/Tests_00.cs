@@ -8,17 +8,17 @@ public class Tests_00 {
 
     [Test]
     public void Test_00() {
-        var stateful = new Stateful<StateBase2>();
+        var stateful = new Stateful<State>();
         stateful.SetState( null );
         stateful.SetState( new A() );
         stateful.SetState( new B() );
         stateful.SetState( null );
     }
 
-    // StateBase
-    internal abstract class StateBase2 : StateBase<StateBase2>, IDisposable {
+    // State
+    internal abstract class State : StateBase<State>, IDisposable {
 
-        public StateBase2() {
+        public State() {
             //TestContext.Out.WriteLine( "Constructor: " + GetType().Name );
         }
         public virtual void Dispose() {
@@ -34,9 +34,9 @@ public class Tests_00 {
 
     }
     // A
-    internal class A : StateBase2 {
+    internal class A : State {
     }
     // B
-    internal class B : StateBase2 {
+    internal class B : State {
     }
 }
