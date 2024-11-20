@@ -19,7 +19,7 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     }
 
     public Activity_ Activity { get; }
-    public new IStateful<TThis>? Stateful { get; }
+    public IStateful<TThis>? Stateful { get; }
 
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
