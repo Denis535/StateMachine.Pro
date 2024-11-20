@@ -1,4 +1,4 @@
-﻿namespace System;
+﻿namespace System.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Text;
