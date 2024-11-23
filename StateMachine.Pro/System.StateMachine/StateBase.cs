@@ -12,12 +12,13 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     }
 
     // Owner
-    private IStateful<TThis>? Owner { get; set; }
+    private IStateful<TThis>? Owner { get; set; } = null;
     // Activity
     public Activity_ Activity { get; private set; } = Activity_.Inactive;
+
     // Stateful
     public IStateful<TThis>? Stateful => Owner;
-    
+
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;
@@ -27,61 +28,62 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     // Constructor
     public StateBase() {
     }
-    protected virtual void DisposeWhenDeactivate() {
+    protected internal virtual void DisposeWhenRemove(object? argument) {
         (this as IDisposable)?.Dispose();
     }
 
-    // SetOwner
-    internal void SetOwner(IStateful<TThis> owner, object? argument) {
-        Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+    // Attach
+    internal void Attach(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
+        Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
         Owner = owner;
         Activate( argument );
     }
-    internal void RemoveOwner(IStateful<TThis> owner, object? argument) {
-        Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+    internal void Detach(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
+        Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
         Deactivate( argument );
         Owner = null;
     }
 
     // Activate
     private void Activate(object? argument) {
+        Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
-        BeforeActivate( argument );
+        OnBeforeActivateInternal( argument );
         Activity = Activity_.Activating;
         {
             OnActivate( argument );
         }
         Activity = Activity_.Active;
-        AfterActivate( argument );
+        OnAfterActivateInternal( argument );
     }
     private void Deactivate(object? argument) {
+        Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
         Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
-        BeforeDeactivate( argument );
+        OnBeforeDeactivateInternal( argument );
         Activity = Activity_.Deactivating;
         {
             OnDeactivate( argument );
         }
         Activity = Activity_.Inactive;
-        AfterDeactivate( argument );
-        DisposeWhenDeactivate();
+        OnAfterDeactivateInternal( argument );
     }
 
-    // Activate
-    private void BeforeActivate(object? argument) {
+    // OnActivate
+    private void OnBeforeActivateInternal(object? argument) {
         OnBeforeActivateEvent?.Invoke( argument );
         OnBeforeActivate( argument );
     }
-    private void AfterActivate(object? argument) {
+    private void OnAfterActivateInternal(object? argument) {
         OnAfterActivate( argument );
         OnAfterActivateEvent?.Invoke( argument );
     }
-    private void BeforeDeactivate(object? argument) {
+    private void OnBeforeDeactivateInternal(object? argument) {
         OnBeforeDeactivateEvent?.Invoke( argument );
         OnBeforeDeactivate( argument );
     }
-    private void AfterDeactivate(object? argument) {
+    private void OnAfterDeactivateInternal(object? argument) {
         OnAfterDeactivate( argument );
         OnAfterDeactivateEvent?.Invoke( argument );
     }
