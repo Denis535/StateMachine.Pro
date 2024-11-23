@@ -11,12 +11,13 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
         Deactivating,
     }
 
-    // Activity
-    public Activity_ Activity { get; private set; } = Activity_.Inactive;
     // Owner
     private IStateful<TThis>? Owner { get; set; }
+    // Activity
+    public Activity_ Activity { get; private set; } = Activity_.Inactive;
     // Stateful
     public IStateful<TThis>? Stateful => Owner;
+    
     // OnActivate
     public event Action<object?>? OnBeforeActivateEvent;
     public event Action<object?>? OnAfterActivateEvent;

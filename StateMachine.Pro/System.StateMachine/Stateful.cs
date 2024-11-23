@@ -6,8 +6,6 @@ using System.Text;
 public class Stateful<T> : IStateful<T> where T : StateBase<T> {
 
     // State
-    T? IStateful<T>.State { get => State; set => State = value; }
-    // State
     public T? State { get; private set; }
 
     // Constructor
@@ -15,10 +13,8 @@ public class Stateful<T> : IStateful<T> where T : StateBase<T> {
     }
 
     // SetState
-    void IStateful<T>.SetState(T? state, object? argument) => SetState( state, argument );
-    // SetState
     public virtual void SetState(T? state, object? argument = null) {
-        IStateful<T>.SetState( this, state, argument );
+        IStateful<T>.SetState( this, (stateful, state) => ((Stateful<T>) stateful).State = state, state, argument );
     }
 
 }
