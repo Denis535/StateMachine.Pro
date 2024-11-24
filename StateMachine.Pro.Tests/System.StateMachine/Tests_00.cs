@@ -58,28 +58,6 @@ public class Tests_00 {
         }
     }
 
-    // State
-    internal abstract class State : StateBase<State> {
-
-        //public bool IsDisposed { get; private set; }
-
-        public State() {
-        }
-        //public virtual void Dispose() {
-        //    System.Assert.Operation.Message( $"Node {this} must be non-disposed" ).Valid( !IsDisposed );
-        //    System.Assert.Operation.Message( $"Node {this} must be inactive" ).Valid( Activity == Activity_.Inactive );
-        //    System.Assert.Operation.Message( $"Node {this} must have no stateful" ).Valid( Stateful == null );
-        //    IsDisposed = true;
-        //}
-
-        protected override void OnActivate(object? argument) {
-            TestContext.Out.WriteLine( "OnActivate: " + GetType().Name );
-        }
-        protected override void OnDeactivate(object? argument) {
-            TestContext.Out.WriteLine( "OnDeactivate: " + GetType().Name );
-        }
-
-    }
     // A
     internal class A : State {
     }
