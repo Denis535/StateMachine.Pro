@@ -46,10 +46,8 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     }
 
     //// OnAttach
-    //protected virtual void OnAttach(object? argument) {
-    //}
-    //protected virtual void OnDetach(object? argument) {
-    //}
+    //protected abstract void OnAttach(object? argument);
+    //protected abstract void OnDetach(object? argument);
 
     // Activate
     private void Activate(object? argument) {
