@@ -29,7 +29,6 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     public event Action<object?>? OnAfterDeactivateEvent;
 
     public StateBase();
-    protected internal virtual void DisposeWhenRemove(object? argument);
 
     internal void Attach(IStateful<TThis> owner, object? argument);
     internal void Detach(IStateful<TThis> owner, object? argument);

@@ -28,23 +28,28 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     // Constructor
     public StateBase() {
     }
-    protected internal virtual void DisposeWhenRemove(object? argument) {
-        (this as IDisposable)?.Dispose();
-    }
 
     // Attach
     internal void Attach(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
         Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
         Owner = owner;
+        //OnAttach( argument );
         Activate( argument );
     }
     internal void Detach(IStateful<TThis> owner, object? argument) {
         Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
         Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
         Deactivate( argument );
+        //OnDetach( argument );
         Owner = null;
     }
+
+    //// OnAttach
+    //protected virtual void OnAttach(object? argument) {
+    //}
+    //protected virtual void OnDetach(object? argument) {
+    //}
 
     // Activate
     private void Activate(object? argument) {

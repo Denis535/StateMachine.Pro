@@ -16,12 +16,10 @@ public class Tests_00 {
         stateful.SetState( null );
         NUnit.Framework.Assert.That( stateful.State, Is.Null );
         {
-            NUnit.Framework.Assert.That( a.IsDisposed, Is.False );
             NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( a.Stateful, Is.Null );
         }
         {
-            NUnit.Framework.Assert.That( b.IsDisposed, Is.False );
             NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( b.Stateful, Is.Null );
         }
@@ -29,12 +27,10 @@ public class Tests_00 {
         stateful.SetState( a );
         NUnit.Framework.Assert.That( stateful.State, Is.EqualTo( a ) );
         {
-            NUnit.Framework.Assert.That( a.IsDisposed, Is.False );
             NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Active ) );
             NUnit.Framework.Assert.That( a.Stateful, Is.EqualTo( stateful ) );
         }
         {
-            NUnit.Framework.Assert.That( b.IsDisposed, Is.False );
             NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( b.Stateful, Is.Null );
         }
@@ -42,12 +38,10 @@ public class Tests_00 {
         stateful.SetState( b );
         NUnit.Framework.Assert.That( stateful.State, Is.EqualTo( b ) );
         {
-            NUnit.Framework.Assert.That( a.IsDisposed, Is.True );
             NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( a.Stateful, Is.Null );
         }
         {
-            NUnit.Framework.Assert.That( b.IsDisposed, Is.False );
             NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Active ) );
             NUnit.Framework.Assert.That( b.Stateful, Is.EqualTo( stateful ) );
         }
@@ -55,30 +49,28 @@ public class Tests_00 {
         stateful.SetState( null );
         NUnit.Framework.Assert.That( stateful.State, Is.Null );
         {
-            NUnit.Framework.Assert.That( a.IsDisposed, Is.True );
             NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( a.Stateful, Is.Null );
         }
         {
-            NUnit.Framework.Assert.That( b.IsDisposed, Is.True );
             NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             NUnit.Framework.Assert.That( a.Stateful, Is.Null );
         }
     }
 
     // State
-    internal abstract class State : StateBase<State>, IDisposable {
+    internal abstract class State : StateBase<State> {
 
-        public bool IsDisposed { get; private set; }
+        //public bool IsDisposed { get; private set; }
 
         public State() {
         }
-        public virtual void Dispose() {
-            System.Assert.Operation.Message( $"Node {this} must be non-disposed" ).Valid( !IsDisposed );
-            System.Assert.Operation.Message( $"Node {this} must be inactive" ).Valid( Activity == Activity_.Inactive );
-            System.Assert.Operation.Message( $"Node {this} must have no stateful" ).Valid( Stateful == null );
-            IsDisposed = true;
-        }
+        //public virtual void Dispose() {
+        //    System.Assert.Operation.Message( $"Node {this} must be non-disposed" ).Valid( !IsDisposed );
+        //    System.Assert.Operation.Message( $"Node {this} must be inactive" ).Valid( Activity == Activity_.Inactive );
+        //    System.Assert.Operation.Message( $"Node {this} must have no stateful" ).Valid( Stateful == null );
+        //    IsDisposed = true;
+        //}
 
         protected override void OnActivate(object? argument) {
             TestContext.Out.WriteLine( "OnActivate: " + GetType().Name );
