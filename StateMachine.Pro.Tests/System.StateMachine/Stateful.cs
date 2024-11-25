@@ -18,6 +18,12 @@ internal class Stateful<T> : IStateful<T> where T : StateBase<T> {
     public virtual void SetState(T? state, object? argument = null) {
         IStateful<T>.SetState( this, state, argument );
     }
+    void IStateful<T>.AddState(T state, object? argument) {
+        IStateful<T>.AddState( this, state, argument );
+    }
+    void IStateful<T>.RemoveState(T state, object? argument) {
+        IStateful<T>.RemoveState( this, state, argument );
+    }
 
 }
 internal abstract class State : StateBase<State> {
