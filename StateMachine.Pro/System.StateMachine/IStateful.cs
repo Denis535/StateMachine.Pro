@@ -35,7 +35,7 @@ public interface IStateful<T> where T : StateBase<T> {
     }
     protected static void AddState(IStateful<T> stateful, T state, object? argument) {
         Assert.Argument.Message( $"Argument 'state' must be non-null" ).NotNull( state != null );
-        Assert.Argument.Message( $"Argument 'state' must be active" ).Valid( state.Activity is StateBase<T>.Activity_.Inactive );
+        Assert.Argument.Message( $"Argument 'state' must be inactive" ).Valid( state.Activity is StateBase<T>.Activity_.Inactive );
         Assert.Operation.Message( $"Stateful {stateful} must have no state" ).Valid( stateful.State == null );
         stateful.State = state;
         stateful.State.Attach( stateful, argument );
