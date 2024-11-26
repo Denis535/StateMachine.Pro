@@ -26,7 +26,7 @@ internal class Stateful<T> : IStateful<T> where T : StateBase<T> {
     }
 
 }
-internal abstract class State : StateBase<State> {
+internal abstract class State : StateBase2<State> {
 
     //public bool IsDisposed { get; private set; }
 
@@ -38,6 +38,11 @@ internal abstract class State : StateBase<State> {
     //    System.Assert.Operation.Message( $"Node {this} must have no stateful" ).Valid( Stateful == null );
     //    IsDisposed = true;
     //}
+
+    protected override void OnAttach(object? argument) {
+    }
+    protected override void OnDetach(object? argument) {
+    }
 
     protected override void OnActivate(object? argument) {
         TestContext.Out.WriteLine( "OnActivate: " + GetType().Name );
