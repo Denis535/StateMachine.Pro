@@ -1,4 +1,3 @@
-#pragma warning disable CA2000 // Dispose objects before losing scope
 namespace System.StateMachine {
     using System;
     using System.Collections.Generic;

@@ -9,7 +9,7 @@ namespace System.StateMachine {
         protected T? State { get; set; }
 
         // SetState
-        protected internal void SetState(T? state, object? argument = null);
+        protected void SetState(T? state, object? argument = null);
         protected void AddState(T state, object? argument = null);
         protected void RemoveState(T state, object? argument = null);
 
