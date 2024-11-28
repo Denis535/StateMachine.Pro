@@ -3,6 +3,7 @@ The library that helps you implement a stateful object, i.e. state pattern.
 
 # Reference
 ```
+namespace System.StateMachine;
 public interface IStateful<T> where T : StateBase<T> {
     
     protected T? State { get; set; }
