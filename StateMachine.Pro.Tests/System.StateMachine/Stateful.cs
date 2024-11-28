@@ -15,14 +15,14 @@
         }
 
         // SetState
-        public void SetState(T? state, object? argument = null) {
-            IStateful<T>.SetState( this, state, argument );
+        public void SetState(T? state, object? argument = null, Action<T>? dispose = null) {
+            IStateful<T>.SetState( this, state, argument, dispose );
         }
-        public void AddState(T state, object? argument) {
+        public void AddState(T state, object? argument = null) {
             IStateful<T>.AddState( this, state, argument );
         }
-        public void RemoveState(T state, object? argument) {
-            IStateful<T>.RemoveState( this, state, argument );
+        public void RemoveState(T state, object? argument = null, Action<T>? dispose = null) {
+            IStateful<T>.RemoveState( this, state, argument, dispose );
         }
 
     }
