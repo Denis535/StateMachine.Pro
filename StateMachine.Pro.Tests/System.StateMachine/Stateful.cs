@@ -4,25 +4,25 @@
     using System.Text;
     using NUnit.Framework;
 
-    internal class Stateful<T> : IStateful<T> where T : StateBase<T> {
+    internal class Stateful : IStateful<State> {
 
         // State
-        T? IStateful<T>.State { get => State; set => State = value; }
-        public T? State { get; private set; }
+        State? IStateful<State>.State { get => State; set => State = value; }
+        public State? State { get; private set; }
 
         // Constructor
         public Stateful() {
         }
 
         // SetState
-        public void SetState(T? state, object? argument = null, Action<T>? dispose = null) {
-            IStateful<T>.SetState( this, state, argument, dispose );
+        public void SetState(State? state, object? argument, Action<State>? onRemoved) {
+            IStateful<State>.SetState( this, state, argument, onRemoved );
         }
-        public void AddState(T state, object? argument = null) {
-            IStateful<T>.AddState( this, state, argument );
+        public void AddState(State state, object? argument) {
+            IStateful<State>.AddState( this, state, argument );
         }
-        public void RemoveState(T state, object? argument = null, Action<T>? dispose = null) {
-            IStateful<T>.RemoveState( this, state, argument, dispose );
+        public void RemoveState(State state, object? argument, Action<State>? onRemoved) {
+            IStateful<State>.RemoveState( this, state, argument, onRemoved );
         }
 
     }
