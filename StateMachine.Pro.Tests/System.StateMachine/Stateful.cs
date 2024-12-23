@@ -15,14 +15,14 @@
         }
 
         // SetState
-        public void SetState(State? state, object? argument, Action<State>? onRemoved) {
-            IStateful<State>.SetState( this, state, argument, onRemoved );
+        public void SetState(State? state, object? argument, Action<State>? callback) {
+            IStateful<State>.SetState( this, state, argument, callback );
         }
         public void AddState(State state, object? argument) {
             IStateful<State>.AddState( this, state, argument );
         }
-        public void RemoveState(State state, object? argument, Action<State>? onRemoved) {
-            IStateful<State>.RemoveState( this, state, argument, onRemoved );
+        public void RemoveState(State state, object? argument, Action<State>? callback) {
+            IStateful<State>.RemoveState( this, state, argument, callback );
         }
 
     }

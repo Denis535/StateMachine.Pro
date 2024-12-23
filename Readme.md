@@ -8,9 +8,9 @@ public interface IStateful<T> where T : StateBase<T> {
 
     protected T? State { get; set; }
 
-    protected void SetState(T? state, object? argument, Action<T>? onRemoved);
+    protected void SetState(T? state, object? argument, Action<T>? callback);
     protected void AddState(T state, object? argument);
-    protected void RemoveState(T state, object? argument, Action<T>? onRemoved);
+    protected void RemoveState(T state, object? argument, Action<T>? callback);
 
 }
 public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
