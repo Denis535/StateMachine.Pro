@@ -39,11 +39,13 @@
         //    IsDisposed = true;
         //}
 
+        // OnAttach
         protected override void OnAttach(object? argument) {
         }
         protected override void OnDetach(object? argument) {
         }
 
+        // OnActivate
         protected override void OnActivate(object? argument) {
             TestContext.Out.WriteLine( "OnActivate: " + GetType().Name );
         }
