@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public abstract class StateBase<TThis> where TThis : StateBase2<TThis> {
+    public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
 
         // Owner
         private protected IStateful<TThis>? Owner { get; private set; } = null;

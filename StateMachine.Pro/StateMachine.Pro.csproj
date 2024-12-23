@@ -7,7 +7,7 @@
         <RootNamespace />
 
         <!--Assembly attributes-->
-        <Version>1.1.3</Version>
+        <Version>1.1.4</Version>
         <Description>The library that helps you implement a stateful object.</Description>
         <Authors>Denis535</Authors>
         <Company>Denis535</Company>
@@ -58,7 +58,7 @@
 
     <!--PackageReference-->
     <ItemGroup>
-        <PackageReference Include="Assert.Kind.Message.Condition" Version="1.0.9" />
+        <PackageReference Include="Assert.Kind.Message.Condition" Version="1.0.10" />
     </ItemGroup>
 
     <!--Include Builds-->
