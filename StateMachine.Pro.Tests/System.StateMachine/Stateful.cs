@@ -33,9 +33,9 @@
         public State() {
         }
         //public virtual void Dispose() {
-        //    System.Assert.Operation.Message( $"Node {this} must be non-disposed" ).Valid( !IsDisposed );
-        //    System.Assert.Operation.Message( $"Node {this} must be inactive" ).Valid( Activity == Activity_.Inactive );
-        //    System.Assert.Operation.Message( $"Node {this} must have no stateful" ).Valid( Stateful == null );
+        //    System.Assert.Operation.Message( $"State {this} must be non-disposed" ).Valid( !IsDisposed );
+        //    System.Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity == Activity_.Inactive );
+        //    System.Assert.Operation.Message( $"State {this} must have no stateful" ).Valid( Stateful == null );
         //    IsDisposed = true;
         //}
 
