@@ -37,17 +37,19 @@
         }
 
         // OnAttach
+        protected abstract void OnAttach(object? argument);
         protected virtual void OnBeforeAttach(object? argument) {
             OnBeforeAttachEvent?.Invoke( argument );
         }
-        protected abstract void OnAttach(object? argument);
         protected virtual void OnAfterAttach(object? argument) {
             OnAfterAttachEvent?.Invoke( argument );
         }
+
+        // OnDetach
+        protected abstract void OnDetach(object? argument);
         protected virtual void OnBeforeDetach(object? argument) {
             OnBeforeDetachEvent?.Invoke( argument );
         }
-        protected abstract void OnDetach(object? argument);
         protected virtual void OnAfterDetach(object? argument) {
             OnAfterDetachEvent?.Invoke( argument );
         }

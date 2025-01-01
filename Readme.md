@@ -29,11 +29,12 @@ public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
     internal virtual void Attach(IStateful<TThis> owner, object? argument);
     internal virtual void Detach(IStateful<TThis> owner, object? argument);
 
-    protected virtual void OnBeforeAttach(object? argument);
     protected abstract void OnAttach(object? argument);
+    protected virtual void OnBeforeAttach(object? argument);
     protected virtual void OnAfterAttach(object? argument);
-    protected virtual void OnBeforeDetach(object? argument);
+
     protected abstract void OnDetach(object? argument);
+    protected virtual void OnBeforeDetach(object? argument);
     protected virtual void OnAfterDetach(object? argument);
 
 }
@@ -61,11 +62,12 @@ public abstract class StateBase2<TThis> : StateBase<TThis> where TThis : StateBa
     private void Activate(object? argument);
     private void Deactivate(object? argument);
 
-    protected virtual void OnBeforeActivate(object? argument);
     protected abstract void OnActivate(object? argument);
+    protected virtual void OnBeforeActivate(object? argument);
     protected virtual void OnAfterActivate(object? argument);
-    protected virtual void OnBeforeDeactivate(object? argument);
+
     protected abstract void OnDeactivate(object? argument);
+    protected virtual void OnBeforeDeactivate(object? argument);
     protected virtual void OnAfterDeactivate(object? argument);
 
 }
