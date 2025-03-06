@@ -1,74 +1,104 @@
 ﻿namespace System.StateMachine.Hierarchical {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text;
 
     public abstract class StateBase3<TThis> : StateBase2<TThis> where TThis : StateBase3<TThis> {
 
-        // Root
-        [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot => Parent == null;
-        public TThis Root => Parent?.Root ?? (TThis) this;
+        // Activity
+        public override Activity_ Activity { get; private protected set; } = Activity_.Inactive;
 
-        // Parent
-        public TThis? Parent => Owner as TThis;
-        public IEnumerable<TThis> Ancestors {
-            get {
-                if (Parent != null) {
-                    yield return Parent;
-                    foreach (var i in Parent.Ancestors) yield return i;
-                }
-            }
-        }
-        public IEnumerable<TThis> AncestorsAndSelf => Ancestors.Prepend( (TThis) this );
-
-        // Child
-        private protected override TThis? ChildInternal => Child;
-        public TThis? Child { get; private set; }
-        public IEnumerable<TThis> Descendants {
-            get {
-                if (Child != null) {
-                    yield return Child;
-                    foreach (var i in Child.Descendants) yield return i;
-                }
-            }
-        }
-        public IEnumerable<TThis> DescendantsAndSelf => Descendants.Prepend( (TThis) this );
+        // OnActivate
+        public override event Action<object?>? OnBeforeActivateEvent;
+        public override event Action<object?>? OnAfterActivateEvent;
+        public override event Action<object?>? OnBeforeDeactivateEvent;
+        public override event Action<object?>? OnAfterDeactivateEvent;
 
         // Constructor
         public StateBase3() {
         }
 
-        // SetChild
-        protected void SetChild(TThis child, object? argument, Action<TThis>? callback) {
-            if (Child != null) {
-                RemoveChild( child, argument, callback );
-            }
-            if (child != null) {
-                AddChild( child, argument );
-            }
+        // Attach
+        internal sealed override void Attach(IStateful<TThis> owner, object? argument) {
+            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            base.Attach( owner, argument );
+            Activate( argument );
         }
-        protected virtual void AddChild(TThis child, object? argument) {
-            Assert.Argument.Message( $"Argument 'child' must be non-null" ).NotNull( child != null );
-            Assert.Operation.Message( $"State {this} must have no child {child} state" ).Valid( Child == null );
-            Child = child;
-            Child.Attach( (TThis) this, argument );
+        internal sealed override void Detach(IStateful<TThis> owner, object? argument) {
+            Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+            Deactivate( argument );
+            base.Detach( owner, argument );
         }
-        protected virtual void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
-            Assert.Argument.Message( $"Argument 'child' must be non-null" ).NotNull( child != null );
-            Assert.Operation.Message( $"State {this} must have child {child} state" ).Valid( Child == child );
-            Child.Detach( (TThis) this, argument );
-            Child = null;
-            callback?.Invoke( child );
-        }
-        protected void RemoveSelf(object? argument, Action<TThis>? callback) {
-            Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
-            if (Parent != null) {
-                Parent.RemoveChild( (TThis) this, argument, callback );
+
+        // Attach
+        internal sealed override void Attach(TThis owner, object? argument) {
+            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            if (owner.Activity is Activity_.Active) {
+                base.Attach( owner, argument );
+                Activate( argument );
             } else {
-                Stateful!.RemoveState( (TThis) this, argument, callback );
+                base.Attach( owner, argument );
             }
+        }
+        internal sealed override void Detach(TThis owner, object? argument) {
+            if (owner.Activity is Activity_.Active) {
+                Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+                Deactivate( argument );
+                base.Detach( owner, argument );
+            } else {
+                Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+                base.Detach( owner, argument );
+            }
+        }
+
+        // Activate
+        internal override void Activate(object? argument) {
+            Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
+            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            OnBeforeActivate( argument );
+            Activity = Activity_.Activating;
+            {
+                OnActivate( argument );
+                if (Child != null) {
+                    Child.Activate( argument );
+                }
+            }
+            Activity = Activity_.Active;
+            OnAfterActivate( argument );
+        }
+        internal override void Deactivate(object? argument) {
+            Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
+            Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+            OnBeforeDeactivate( argument );
+            Activity = Activity_.Deactivating;
+            {
+                if (Child != null) {
+                    Child.Deactivate( argument );
+                }
+                OnDeactivate( argument );
+            }
+            Activity = Activity_.Inactive;
+            OnAfterDeactivate( argument );
+        }
+
+        // OnActivate
+        //protected override void OnActivate(object? argument) {
+        //}
+        protected override void OnBeforeActivate(object? argument) {
+            OnBeforeActivateEvent?.Invoke( argument );
+        }
+        protected override void OnAfterActivate(object? argument) {
+            OnAfterActivateEvent?.Invoke( argument );
+        }
+
+        // OnDeactivate
+        //protected override void OnDeactivate(object? argument) {
+        //}
+        protected override void OnBeforeDeactivate(object? argument) {
+            OnBeforeDeactivateEvent?.Invoke( argument );
+        }
+        protected override void OnAfterDeactivate(object? argument) {
+            OnAfterDeactivateEvent?.Invoke( argument );
         }
 
     }
