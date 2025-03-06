@@ -23,8 +23,7 @@ public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
     public abstract event Action<object?>? OnBeforeDetachEvent;
     public abstract event Action<object?>? OnAfterDetachEvent;
 
-    public StateBase() {
-    }
+    public StateBase();
 
     internal abstract void Attach(IStateful<TThis> owner, object? argument);
     internal abstract void Detach(IStateful<TThis> owner, object? argument);
@@ -87,8 +86,7 @@ public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
     public abstract event Action<object?>? OnBeforeDetachEvent;
     public abstract event Action<object?>? OnAfterDetachEvent;
 
-    public StateBase() {
-    }
+    public StateBase();
 
     internal abstract void Attach(IStateful<TThis> owner, object? argument);
     internal abstract void Detach(IStateful<TThis> owner, object? argument);
