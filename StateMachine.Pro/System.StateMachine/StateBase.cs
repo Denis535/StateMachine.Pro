@@ -1,58 +1,74 @@
-﻿namespace System.StateMachine {
+namespace System.StateMachine {
     using System;
     using System.Collections.Generic;
     using System.Text;
 
-    public abstract class StateBase<TThis> where TThis : StateBase<TThis> {
+    public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
 
         // Owner
-        private protected IStateful<TThis>? Owner { get; private set; } = null;
+        private protected abstract IStateful<TThis>? Owner { get; set; }
         // Stateful
-        public IStateful<TThis>? Stateful => Owner;
+        public abstract IStateful<TThis>? Stateful { get; }
 
         // OnAttach
-        public event Action<object?>? OnBeforeAttachEvent;
-        public event Action<object?>? OnAfterAttachEvent;
-        public event Action<object?>? OnBeforeDetachEvent;
-        public event Action<object?>? OnAfterDetachEvent;
+        public abstract event Action<object?>? OnBeforeAttachEvent;
+        public abstract event Action<object?>? OnAfterAttachEvent;
+        public abstract event Action<object?>? OnBeforeDetachEvent;
+        public abstract event Action<object?>? OnAfterDetachEvent;
 
         // Constructor
         public StateBase() {
         }
 
         // Attach
-        internal virtual void Attach(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must have no owner" ).Valid( Owner == null );
-            Owner = owner;
-            OnBeforeAttach( argument );
-            OnAttach( argument );
-            OnAfterAttach( argument );
-        }
-        internal virtual void Detach(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must have {owner} owner" ).Valid( Owner == owner );
-            OnBeforeDetach( argument );
-            OnDetach( argument );
-            OnAfterDetach( argument );
-            Owner = null;
-        }
+        internal abstract void Attach(IStateful<TThis> owner, object? argument);
+        internal abstract void Detach(IStateful<TThis> owner, object? argument);
 
         // OnAttach
         protected abstract void OnAttach(object? argument);
-        protected virtual void OnBeforeAttach(object? argument) {
-            OnBeforeAttachEvent?.Invoke( argument );
-        }
-        protected virtual void OnAfterAttach(object? argument) {
-            OnAfterAttachEvent?.Invoke( argument );
-        }
+        protected abstract void OnBeforeAttach(object? argument);
+        protected abstract void OnAfterAttach(object? argument);
 
         // OnDetach
         protected abstract void OnDetach(object? argument);
-        protected virtual void OnBeforeDetach(object? argument) {
-            OnBeforeDetachEvent?.Invoke( argument );
+        protected abstract void OnBeforeDetach(object? argument);
+        protected abstract void OnAfterDetach(object? argument);
+
+    }
+    public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
+        public enum Activity_ {
+            Inactive,
+            Activating,
+            Active,
+            Deactivating,
         }
-        protected virtual void OnAfterDetach(object? argument) {
-            OnAfterDetachEvent?.Invoke( argument );
-        }
+
+        // Activity
+        public abstract Activity_ Activity { get; private protected set; }
+
+        // OnActivate
+        public abstract event Action<object?>? OnBeforeActivateEvent;
+        public abstract event Action<object?>? OnAfterActivateEvent;
+        public abstract event Action<object?>? OnBeforeDeactivateEvent;
+        public abstract event Action<object?>? OnAfterDeactivateEvent;
+
+        // Constructor
+        //public StateBase() {
+        //}
+
+        // Activate
+        internal abstract void Activate(object? argument);
+        internal abstract void Deactivate(object? argument);
+
+        // OnActivate
+        protected abstract void OnActivate(object? argument);
+        protected abstract void OnBeforeActivate(object? argument);
+        protected abstract void OnAfterActivate(object? argument);
+
+        // OnDeactivate
+        protected abstract void OnDeactivate(object? argument);
+        protected abstract void OnBeforeDeactivate(object? argument);
+        protected abstract void OnAfterDeactivate(object? argument);
 
     }
 }

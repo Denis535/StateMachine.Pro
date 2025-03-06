@@ -1,4 +1,4 @@
-﻿namespace System.StateMachine.Hierarchical {
+﻿namespace System.StateMachine {
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -30,27 +30,6 @@
             base.Detach( owner, argument );
         }
 
-        // Attach
-        internal override void Attach(TThis owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
-            if (owner.Activity is Activity_.Active) {
-                base.Attach( owner, argument );
-                Activate( argument );
-            } else {
-                base.Attach( owner, argument );
-            }
-        }
-        internal override void Detach(TThis owner, object? argument) {
-            if (owner.Activity is Activity_.Active) {
-                Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
-                Deactivate( argument );
-                base.Detach( owner, argument );
-            } else {
-                Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
-                base.Detach( owner, argument );
-            }
-        }
-
         // Activate
         internal override void Activate(object? argument) {
             Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
@@ -59,9 +38,6 @@
             Activity = Activity_.Activating;
             {
                 OnActivate( argument );
-                if (Child != null) {
-                    Child.Activate( argument );
-                }
             }
             Activity = Activity_.Active;
             OnAfterActivate( argument );
@@ -72,9 +48,6 @@
             OnBeforeDeactivate( argument );
             Activity = Activity_.Deactivating;
             {
-                if (Child != null) {
-                    Child.Deactivate( argument );
-                }
                 OnDeactivate( argument );
             }
             Activity = Activity_.Inactive;
