@@ -41,33 +41,6 @@ namespace System.StateMachine.Hierarchical {
 
     }
     public abstract partial class StateBase<TThis> {
-
-        // Root
-        [MemberNotNullWhen( false, nameof( Parent ) )] public abstract bool IsRoot { get; }
-        public abstract TThis Root { get; }
-
-        // Parent
-        public abstract TThis? Parent { get; }
-        public abstract IEnumerable<TThis> Ancestors { get; }
-        public abstract IEnumerable<TThis> AncestorsAndSelf { get; }
-
-        // Child
-        public abstract TThis? Child { get; private protected set; }
-        public abstract IEnumerable<TThis> Descendants { get; }
-        public abstract IEnumerable<TThis> DescendantsAndSelf { get; }
-
-        // Constructor
-        //public StateBase() {
-        //}
-
-        // SetChild
-        protected abstract void SetChild(TThis? child, object? argument, Action<TThis>? callback);
-        protected abstract void AddChild(TThis child, object? argument);
-        protected abstract void RemoveChild(TThis child, object? argument, Action<TThis>? callback);
-        protected abstract void RemoveSelf(object? argument, Action<TThis>? callback);
-
-    }
-    public abstract partial class StateBase<TThis> {
         public enum Activity_ {
             Inactive,
             Activating,
@@ -101,6 +74,33 @@ namespace System.StateMachine.Hierarchical {
         protected abstract void OnDeactivate(object? argument);
         protected abstract void OnBeforeDeactivate(object? argument);
         protected abstract void OnAfterDeactivate(object? argument);
+
+    }
+    public abstract partial class StateBase<TThis> {
+
+        // Root
+        [MemberNotNullWhen( false, nameof( Parent ) )] public abstract bool IsRoot { get; }
+        public abstract TThis Root { get; }
+
+        // Parent
+        public abstract TThis? Parent { get; }
+        public abstract IEnumerable<TThis> Ancestors { get; }
+        public abstract IEnumerable<TThis> AncestorsAndSelf { get; }
+
+        // Child
+        public abstract TThis? Child { get; private protected set; }
+        public abstract IEnumerable<TThis> Descendants { get; }
+        public abstract IEnumerable<TThis> DescendantsAndSelf { get; }
+
+        // Constructor
+        //public StateBase() {
+        //}
+
+        // SetChild
+        protected abstract void SetChild(TThis? child, object? argument, Action<TThis>? callback);
+        protected abstract void AddChild(TThis child, object? argument);
+        protected abstract void RemoveChild(TThis child, object? argument, Action<TThis>? callback);
+        protected abstract void RemoveSelf(object? argument, Action<TThis>? callback);
 
     }
 }
