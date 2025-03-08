@@ -3,7 +3,7 @@ namespace System.StateMachine {
     using System.Collections.Generic;
     using System.Text;
 
-    public interface IStateful<T> where T : StateBase<T> {
+    public interface IStateful<T> where T : notnull, StateBase<T> {
 
         // State
         protected T? State { get; set; }

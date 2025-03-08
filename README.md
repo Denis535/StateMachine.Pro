@@ -4,7 +4,7 @@ The library that allows you to easily implement a stateful object.
 # Reference
 ```
 namespace System.StateMachine;
-public interface IStateful<T> where T : StateBase<T> {
+public interface IStateful<T> where T :  notnull, StateBase<T> {
 
     protected T? State { get; set; }
 
@@ -13,7 +13,7 @@ public interface IStateful<T> where T : StateBase<T> {
     protected void RemoveState(T state, object? argument, Action<T>? callback);
 
 }
-public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
+public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
 
     private IStateful<TThis>? Owner { get; set; }
     public IStateful<TThis>? Stateful { get; }
@@ -72,7 +72,7 @@ public abstract partial class StateBase<TThis> {
 ```
 ```
 namespace System.StateMachine.Hierarchical;
-public interface IStateful<T> where T : StateBase<T> {
+public interface IStateful<T> where T :  notnull, StateBase<T> {
 
     protected T? State { get; set; }
 
@@ -81,7 +81,7 @@ public interface IStateful<T> where T : StateBase<T> {
     protected internal void RemoveState(T state, object? argument, Action<T>? callback);
 
 }
-public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
+public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
 
     private object? Owner { get; set; }
     public IStateful<TThis>? Stateful { get; }
@@ -117,7 +117,7 @@ public abstract partial class StateBase<TThis> {
     public IEnumerable<TThis> Ancestors { get; }
     public IEnumerable<TThis> AncestorsAndSelf { get; }
 
-    public TThis? Child { get; }
+    public TThis? Child { get; private set; }
     public IEnumerable<TThis> Descendants { get; }
     public IEnumerable<TThis> DescendantsAndSelf { get; }
 

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
+    public abstract partial class StateBase<TThis> where TThis : notnull, StateBase<TThis> {
 
         // Owner
         private object? Owner { get; set; }

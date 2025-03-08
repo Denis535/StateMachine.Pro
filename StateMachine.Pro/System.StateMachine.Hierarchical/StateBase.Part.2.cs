@@ -24,7 +24,7 @@
         public IEnumerable<TThis> AncestorsAndSelf => Ancestors.Prepend( (TThis) this );
 
         // Child
-        public TThis? Child { get; private protected set; }
+        public TThis? Child { get; private set; }
         public IEnumerable<TThis> Descendants {
             get {
                 if (Child != null) {
