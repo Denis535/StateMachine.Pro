@@ -24,14 +24,14 @@ namespace System.StateMachine {
             }
         }
         protected static void AddState(IStateful<T> stateful, T state, object? argument) {
-            Debug2.Assert.Argument( $"Argument 'state' must be non-null", state != null );
-            Debug2.Assert.Operation( $"Stateful {stateful} must have no state", stateful.State == null );
+            Debug2.Assert.Argument.NotNull( $"Argument 'state' must be non-null", state != null );
+            Debug2.Assert.Operation.Valid( $"Stateful {stateful} must have no state", stateful.State == null );
             stateful.State = state;
             stateful.State.Attach( stateful, argument );
         }
         protected static void RemoveState(IStateful<T> stateful, T state, object? argument, Action<T>? callback) {
-            Debug2.Assert.Argument( $"Argument 'state' must be non-null", state != null );
-            Debug2.Assert.Operation( $"Stateful {stateful} must have {state} state", stateful.State == state );
+            Debug2.Assert.Argument.NotNull( $"Argument 'state' must be non-null", state != null );
+            Debug2.Assert.Operation.Valid( $"Stateful {stateful} must have {state} state", stateful.State == state );
             stateful.State.Detach( stateful, argument );
             stateful.State = null;
             callback?.Invoke( state );

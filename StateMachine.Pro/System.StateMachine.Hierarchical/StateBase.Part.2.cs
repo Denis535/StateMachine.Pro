@@ -50,20 +50,20 @@
             }
         }
         protected void AddChild(TThis child, object? argument) {
-            Debug2.Assert.Argument( $"Argument 'child' must be non-null", child != null );
-            Debug2.Assert.Operation( $"State {this} must have no child {child} state", Child == null );
+            Debug2.Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
+            Debug2.Assert.Operation.Valid( $"State {this} must have no child {child} state", Child == null );
             Child = child;
             Child.Attach( (TThis) this, argument );
         }
         protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
-            Debug2.Assert.Argument( $"Argument 'child' must be non-null", child != null );
-            Debug2.Assert.Operation( $"State {this} must have child {child} state", Child == child );
+            Debug2.Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
+            Debug2.Assert.Operation.Valid( $"State {this} must have child {child} state", Child == child );
             Child.Detach( (TThis) this, argument );
             Child = null;
             callback?.Invoke( child );
         }
         protected void RemoveSelf(object? argument, Action<TThis>? callback) {
-            Debug2.Assert.Operation( $"State {this} must have owner", Owner != null );
+            Debug2.Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
             if (Parent != null) {
                 Parent.RemoveChild( (TThis) this, argument, callback );
             } else {

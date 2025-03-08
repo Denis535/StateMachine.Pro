@@ -23,14 +23,14 @@
 
         // Attach
         private void AttachBase(IStateful<TThis> owner, object? argument) {
-            Debug2.Assert.Operation( $"State {this} must have no owner", Owner == null );
+            Debug2.Assert.Operation.Valid( $"State {this} must have no owner", Owner == null );
             Owner = owner;
             OnBeforeAttach( argument );
             OnAttach( argument );
             OnAfterAttach( argument );
         }
         private void DetachBase(IStateful<TThis> owner, object? argument) {
-            Debug2.Assert.Operation( $"State {this} must have {owner} owner", Owner == owner );
+            Debug2.Assert.Operation.Valid( $"State {this} must have {owner} owner", Owner == owner );
             OnBeforeDetach( argument );
             OnDetach( argument );
             OnAfterDetach( argument );
@@ -39,14 +39,14 @@
 
         // Attach
         private void AttachBase(TThis owner, object? argument) {
-            Debug2.Assert.Operation( $"State {this} must have no owner", Owner == null );
+            Debug2.Assert.Operation.Valid( $"State {this} must have no owner", Owner == null );
             Owner = owner;
             OnBeforeAttach( argument );
             OnAttach( argument );
             OnAfterAttach( argument );
         }
         private void DetachBase(TThis owner, object? argument) {
-            Debug2.Assert.Operation( $"State {this} must have {owner} owner", Owner == owner );
+            Debug2.Assert.Operation.Valid( $"State {this} must have {owner} owner", Owner == owner );
             OnBeforeDetach( argument );
             OnDetach( argument );
             OnAfterDetach( argument );
