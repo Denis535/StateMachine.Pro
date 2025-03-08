@@ -6,7 +6,7 @@
     public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
 
         // Owner
-        private protected IStateful<TThis>? Owner { get; set; }
+        private IStateful<TThis>? Owner { get; set; }
         // Stateful
         public IStateful<TThis>? Stateful => Owner;
 

@@ -12,7 +12,7 @@
         }
 
         // Activity
-        public Activity_ Activity { get; private protected set; } = Activity_.Inactive;
+        public Activity_ Activity { get; private set; } = Activity_.Inactive;
 
         // OnActivate
         public event Action<object?>? OnBeforeActivateEvent;

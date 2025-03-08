@@ -15,29 +15,29 @@ public interface IStateful<T> where T : StateBase<T> {
 }
 public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
 
-    private protected abstract IStateful<TThis>? Owner { get; set; }
-    public abstract IStateful<TThis>? Stateful { get; }
+    private IStateful<TThis>? Owner { get; set; }
+    public IStateful<TThis>? Stateful { get; }
 
-    public abstract event Action<object?>? OnBeforeAttachEvent;
-    public abstract event Action<object?>? OnAfterAttachEvent;
-    public abstract event Action<object?>? OnBeforeDetachEvent;
-    public abstract event Action<object?>? OnAfterDetachEvent;
+    public event Action<object?>? OnBeforeAttachEvent;
+    public event Action<object?>? OnAfterAttachEvent;
+    public event Action<object?>? OnBeforeDetachEvent;
+    public event Action<object?>? OnAfterDetachEvent;
 
     public StateBase();
 
-    internal abstract void Attach(IStateful<TThis> owner, object? argument);
-    internal abstract void Detach(IStateful<TThis> owner, object? argument);
+    private void AttachBase(IStateful<TThis> owner, object? argument);
+    private void DetachBase(IStateful<TThis> owner, object? argument);
 
     protected abstract void OnAttach(object? argument);
-    protected abstract void OnBeforeAttach(object? argument);
-    protected abstract void OnAfterAttach(object? argument);
+    protected virtual void OnBeforeAttach(object? argument);
+    protected virtual void OnAfterAttach(object? argument);
 
     protected abstract void OnDetach(object? argument);
-    protected abstract void OnBeforeDetach(object? argument);
-    protected abstract void OnAfterDetach(object? argument);
+    protected virtual void OnBeforeDetach(object? argument);
+    protected virtual void OnAfterDetach(object? argument);
 
 }
-public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
+public abstract partial class StateBase<TThis> {
     public enum Activity_ {
         Inactive,
         Activating,
@@ -45,23 +45,28 @@ public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
         Deactivating,
     }
 
-    public abstract Activity_ Activity { get; private protected set; }
+    public Activity_ Activity { get; private set; }
 
-    public abstract event Action<object?>? OnBeforeActivateEvent;
-    public abstract event Action<object?>? OnAfterActivateEvent;
-    public abstract event Action<object?>? OnBeforeDeactivateEvent;
-    public abstract event Action<object?>? OnAfterDeactivateEvent;
+    public event Action<object?>? OnBeforeActivateEvent;
+    public event Action<object?>? OnAfterActivateEvent;
+    public event Action<object?>? OnBeforeDeactivateEvent;
+    public event Action<object?>? OnAfterDeactivateEvent;
 
-    internal abstract void Activate(object? argument);
-    internal abstract void Deactivate(object? argument);
+    //public StateBase();
+
+    internal void Attach(IStateful<TThis> owner, object? argument);
+    internal void Detach(IStateful<TThis> owner, object? argument);
+
+    private void Activate(object? argument);
+    private void Deactivate(object? argument);
 
     protected abstract void OnActivate(object? argument);
-    protected abstract void OnBeforeActivate(object? argument);
-    protected abstract void OnAfterActivate(object? argument);
+    protected virtual void OnBeforeActivate(object? argument);
+    protected virtual void OnAfterActivate(object? argument);
 
     protected abstract void OnDeactivate(object? argument);
-    protected abstract void OnBeforeDeactivate(object? argument);
-    protected abstract void OnAfterDeactivate(object? argument);
+    protected virtual void OnBeforeDeactivate(object? argument);
+    protected virtual void OnAfterDeactivate(object? argument);
 
 }
 ```
@@ -78,29 +83,50 @@ public interface IStateful<T> where T : StateBase<T> {
 }
 public abstract partial class StateBase<TThis> where TThis : StateBase<TThis> {
 
-    private protected abstract object? Owner { get; set; }
-    public abstract IStateful<TThis>? Stateful { get; }
+    private object? Owner { get; set; }
+    public IStateful<TThis>? Stateful { get; }
 
-    public abstract event Action<object?>? OnBeforeAttachEvent;
-    public abstract event Action<object?>? OnAfterAttachEvent;
-    public abstract event Action<object?>? OnBeforeDetachEvent;
-    public abstract event Action<object?>? OnAfterDetachEvent;
+    public event Action<object?>? OnBeforeAttachEvent;
+    public event Action<object?>? OnAfterAttachEvent;
+    public event Action<object?>? OnBeforeDetachEvent;
+    public event Action<object?>? OnAfterDetachEvent;
 
     public StateBase();
 
-    internal abstract void Attach(IStateful<TThis> owner, object? argument);
-    internal abstract void Detach(IStateful<TThis> owner, object? argument);
+    private void AttachBase(IStateful<TThis> owner, object? argument);
+    private void DetachBase(IStateful<TThis> owner, object? argument);
 
-    internal abstract void Attach(TThis owner, object? argument);
-    internal abstract void Detach(TThis owner, object? argument);
+    private void AttachBase(TThis owner, object? argument);
+    private void DetachBase(TThis owner, object? argument);
 
     protected abstract void OnAttach(object? argument);
-    protected abstract void OnBeforeAttach(object? argument);
-    protected abstract void OnAfterAttach(object? argument);
+    protected virtual void OnBeforeAttach(object? argument);
+    protected virtual void OnAfterAttach(object? argument);
 
     protected abstract void OnDetach(object? argument);
-    protected abstract void OnBeforeDetach(object? argument);
-    protected abstract void OnAfterDetach(object? argument);
+    protected virtual void OnBeforeDetach(object? argument);
+    protected virtual void OnAfterDetach(object? argument);
+
+}
+public abstract partial class StateBase<TThis> {
+
+    [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot { get; }
+    public TThis Root { get; }
+
+    public TThis? Parent { get; }
+    public IEnumerable<TThis> Ancestors { get; }
+    public IEnumerable<TThis> AncestorsAndSelf { get; }
+
+    public TThis? Child { get; }
+    public IEnumerable<TThis> Descendants { get; }
+    public IEnumerable<TThis> DescendantsAndSelf { get; }
+
+    //public StateBase();
+
+    protected void SetChild(TThis? child, object? argument, Action<TThis>? callback);
+    protected void AddChild(TThis child, object? argument);
+    protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback);
+    protected void RemoveSelf(object? argument, Action<TThis>? callback);
 
 }
 public abstract partial class StateBase<TThis> {
@@ -111,42 +137,28 @@ public abstract partial class StateBase<TThis> {
         Deactivating,
     }
 
-    public abstract Activity_ Activity { get; private protected set; }
+    public Activity_ Activity { get; private set; }
 
-    public abstract event Action<object?>? OnBeforeActivateEvent;
-    public abstract event Action<object?>? OnAfterActivateEvent;
-    public abstract event Action<object?>? OnBeforeDeactivateEvent;
-    public abstract event Action<object?>? OnAfterDeactivateEvent;
+    public event Action<object?>? OnBeforeActivateEvent;
+    public event Action<object?>? OnAfterActivateEvent;
+    public event Action<object?>? OnBeforeDeactivateEvent;
+    public event Action<object?>? OnAfterDeactivateEvent;
 
-    internal abstract void Activate(object? argument);
-    internal abstract void Deactivate(object? argument);
+    //public StateBase();
+
+    internal void Attach(IStateful<TThis> owner, object? argument);
+    internal void Detach(IStateful<TThis> owner, object? argument);
+
+    private void Activate(object? argument);
+    private void Deactivate(object? argument);
 
     protected abstract void OnActivate(object? argument);
-    protected abstract void OnBeforeActivate(object? argument);
-    protected abstract void OnAfterActivate(object? argument);
+    protected virtual void OnBeforeActivate(object? argument);
+    protected virtual void OnAfterActivate(object? argument);
 
     protected abstract void OnDeactivate(object? argument);
-    protected abstract void OnBeforeDeactivate(object? argument);
-    protected abstract void OnAfterDeactivate(object? argument);
-
-}
-public abstract partial class StateBase<TThis> {
-
-    [MemberNotNullWhen( false, nameof( Parent ) )] public abstract bool IsRoot { get; }
-    public abstract TThis Root { get; }
-
-    public abstract TThis? Parent { get; }
-    public abstract IEnumerable<TThis> Ancestors { get; }
-    public abstract IEnumerable<TThis> AncestorsAndSelf { get; }
-
-    public abstract TThis? Child { get; private protected set; }
-    public abstract IEnumerable<TThis> Descendants { get; }
-    public abstract IEnumerable<TThis> DescendantsAndSelf { get; }
-
-    protected abstract void SetChild(TThis? child, object? argument, Action<TThis>? callback);
-    protected abstract void AddChild(TThis child, object? argument);
-    protected abstract void RemoveChild(TThis child, object? argument, Action<TThis>? callback);
-    protected abstract void RemoveSelf(object? argument, Action<TThis>? callback);
+    protected virtual void OnBeforeDeactivate(object? argument);
+    protected virtual void OnAfterDeactivate(object? argument);
 
 }
 ```
