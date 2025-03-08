@@ -3,35 +3,41 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public abstract class StateBase3<TThis> : StateBase2<TThis> where TThis : StateBase3<TThis> {
+    public abstract partial class StateBase<TThis> {
+        public enum Activity_ {
+            Inactive,
+            Activating,
+            Active,
+            Deactivating,
+        }
 
         // Activity
-        public override Activity_ Activity { get; private protected set; } = Activity_.Inactive;
+        public Activity_ Activity { get; private protected set; } = Activity_.Inactive;
 
         // OnActivate
-        public override event Action<object?>? OnBeforeActivateEvent;
-        public override event Action<object?>? OnAfterActivateEvent;
-        public override event Action<object?>? OnBeforeDeactivateEvent;
-        public override event Action<object?>? OnAfterDeactivateEvent;
+        public event Action<object?>? OnBeforeActivateEvent;
+        public event Action<object?>? OnAfterActivateEvent;
+        public event Action<object?>? OnBeforeDeactivateEvent;
+        public event Action<object?>? OnAfterDeactivateEvent;
 
         // Constructor
-        public StateBase3() {
-        }
+        //public StateBase() {
+        //}
 
         // Attach
-        internal override void Attach(IStateful<TThis> owner, object? argument) {
+        internal void Attach(IStateful<TThis> owner, object? argument) {
             Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
-            base.Attach( owner, argument );
+            AttachBase( owner, argument );
             Activate( argument );
         }
-        internal override void Detach(IStateful<TThis> owner, object? argument) {
+        internal void Detach(IStateful<TThis> owner, object? argument) {
             Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
             Deactivate( argument );
-            base.Detach( owner, argument );
+            DetachBase( owner, argument );
         }
 
         // Activate
-        internal override void Activate(object? argument) {
+        private void Activate(object? argument) {
             Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
             Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
             OnBeforeActivate( argument );
@@ -42,7 +48,7 @@
             Activity = Activity_.Active;
             OnAfterActivate( argument );
         }
-        internal override void Deactivate(object? argument) {
+        private void Deactivate(object? argument) {
             Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
             Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
             OnBeforeDeactivate( argument );
@@ -55,22 +61,20 @@
         }
 
         // OnActivate
-        //protected override void OnActivate(object? argument) {
-        //}
-        protected override void OnBeforeActivate(object? argument) {
+        protected abstract void OnActivate(object? argument);
+        protected virtual void OnBeforeActivate(object? argument) {
             OnBeforeActivateEvent?.Invoke( argument );
         }
-        protected override void OnAfterActivate(object? argument) {
+        protected virtual void OnAfterActivate(object? argument) {
             OnAfterActivateEvent?.Invoke( argument );
         }
 
         // OnDeactivate
-        //protected override void OnDeactivate(object? argument) {
-        //}
-        protected override void OnBeforeDeactivate(object? argument) {
+        protected abstract void OnDeactivate(object? argument);
+        protected virtual void OnBeforeDeactivate(object? argument) {
             OnBeforeDeactivateEvent?.Invoke( argument );
         }
-        protected override void OnAfterDeactivate(object? argument) {
+        protected virtual void OnAfterDeactivate(object? argument) {
             OnAfterDeactivateEvent?.Invoke( argument );
         }
 
