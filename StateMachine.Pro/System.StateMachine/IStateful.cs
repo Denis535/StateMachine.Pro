@@ -1,6 +1,7 @@
 namespace System.StateMachine {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
 
     public interface IStateful<T> where T : notnull, StateBase<T> {
@@ -23,14 +24,14 @@ namespace System.StateMachine {
             }
         }
         protected static void AddState(IStateful<T> stateful, T state, object? argument) {
-            Assert.Argument.Message( $"Argument 'state' must be non-null" ).NotNull( state != null );
-            Assert.Operation.Message( $"Stateful {stateful} must have no state" ).Valid( stateful.State == null );
+            Debug2.Assert.Argument( $"Argument 'state' must be non-null", state != null );
+            Debug2.Assert.Operation( $"Stateful {stateful} must have no state", stateful.State == null );
             stateful.State = state;
             stateful.State.Attach( stateful, argument );
         }
         protected static void RemoveState(IStateful<T> stateful, T state, object? argument, Action<T>? callback) {
-            Assert.Argument.Message( $"Argument 'state' must be non-null" ).NotNull( state != null );
-            Assert.Operation.Message( $"Stateful {stateful} must have {state} state" ).Valid( stateful.State == state );
+            Debug2.Assert.Argument( $"Argument 'state' must be non-null", state != null );
+            Debug2.Assert.Operation( $"Stateful {stateful} must have {state} state", stateful.State == state );
             stateful.State.Detach( stateful, argument );
             stateful.State = null;
             callback?.Invoke( state );

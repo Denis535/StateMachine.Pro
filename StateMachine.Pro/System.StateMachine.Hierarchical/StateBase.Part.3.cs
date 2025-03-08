@@ -1,6 +1,7 @@
 ﻿namespace System.StateMachine.Hierarchical {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
 
     public abstract partial class StateBase<TThis> {
@@ -26,19 +27,19 @@
 
         // Attach
         internal void Attach(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            Debug2.Assert.Operation( $"State {this} must be inactive", Activity is Activity_.Inactive );
             AttachBase( owner, argument );
             Activate( argument );
         }
         internal void Detach(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+            Debug2.Assert.Operation( $"State {this} must be active", Activity is Activity_.Active );
             Deactivate( argument );
             DetachBase( owner, argument );
         }
 
         // Attach
         internal void Attach(TThis owner, object? argument) {
-            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            Debug2.Assert.Operation( $"State {this} must be inactive", Activity is Activity_.Inactive );
             if (owner.Activity is Activity_.Active) {
                 AttachBase( owner, argument );
                 Activate( argument );
@@ -48,19 +49,19 @@
         }
         internal void Detach(TThis owner, object? argument) {
             if (owner.Activity is Activity_.Active) {
-                Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+                Debug2.Assert.Operation( $"State {this} must be active", Activity is Activity_.Active );
                 Deactivate( argument );
                 DetachBase( owner, argument );
             } else {
-                Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+                Debug2.Assert.Operation( $"State {this} must be inactive", Activity is Activity_.Inactive );
                 DetachBase( owner, argument );
             }
         }
 
         // Activate
         private void Activate(object? argument) {
-            Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
-            Assert.Operation.Message( $"State {this} must be inactive" ).Valid( Activity is Activity_.Inactive );
+            Debug2.Assert.Operation( $"State {this} must have owner", Owner != null );
+            Debug2.Assert.Operation( $"State {this} must be inactive", Activity is Activity_.Inactive );
             OnBeforeActivate( argument );
             Activity = Activity_.Activating;
             {
@@ -73,8 +74,8 @@
             OnAfterActivate( argument );
         }
         private void Deactivate(object? argument) {
-            Assert.Operation.Message( $"State {this} must have owner" ).Valid( Owner != null );
-            Assert.Operation.Message( $"State {this} must be active" ).Valid( Activity is Activity_.Active );
+            Debug2.Assert.Operation( $"State {this} must have owner", Owner != null );
+            Debug2.Assert.Operation( $"State {this} must be active", Activity is Activity_.Active );
             OnBeforeDeactivate( argument );
             Activity = Activity_.Deactivating;
             {
