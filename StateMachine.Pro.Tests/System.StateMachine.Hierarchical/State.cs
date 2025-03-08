@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Text;
 
-    internal class State : StateBase4<State> {
+    internal class State : StateBase<State> {
 
         //public bool IsDisposed { get; private set; }
 
