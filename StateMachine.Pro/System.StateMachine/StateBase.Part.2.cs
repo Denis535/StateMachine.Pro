@@ -1,7 +1,6 @@
 ﻿namespace System.StateMachine {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Text;
 
     public abstract partial class StateBase<TThis> {
@@ -27,20 +26,20 @@
 
         // Attach
         internal void Attach(IStateful<TThis> owner, object? argument) {
-            Debug2.Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
+            Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
             AttachBase( owner, argument );
             Activate( argument );
         }
         internal void Detach(IStateful<TThis> owner, object? argument) {
-            Debug2.Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
+            Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
             Deactivate( argument );
             DetachBase( owner, argument );
         }
 
         // Activate
         private void Activate(object? argument) {
-            Debug2.Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
-            Debug2.Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
+            Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
+            Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
             OnBeforeActivate( argument );
             Activity = Activity_.Activating;
             {
@@ -50,8 +49,8 @@
             OnAfterActivate( argument );
         }
         private void Deactivate(object? argument) {
-            Debug2.Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
-            Debug2.Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
+            Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
+            Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
             OnBeforeDeactivate( argument );
             Activity = Activity_.Deactivating;
             {
