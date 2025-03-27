@@ -50,7 +50,7 @@
         }
         protected void AddChild(TThis child, object? argument) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
-            Assert.Operation.Valid( $"State {this} must have no child {child} state", Child == null );
+            Assert.Operation.Valid( $"State {this} must have no child", Child == null );
             Assert.Operation.Valid( $"Child {child} must have no owner", child.Owner == null );
             Assert.Operation.Valid( $"Child {child} must be inactive", child.Activity == Activity_.Inactive );
             Child = child;
@@ -58,8 +58,8 @@
         }
         protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
-            Assert.Operation.Valid( $"State {this} must have child {child} state", Child == child );
-            Assert.Operation.Valid( $"Child {child} must have owner", child.Owner == this );
+            Assert.Operation.Valid( $"State {this} must have {child} child", Child == child );
+            Assert.Operation.Valid( $"Child {child} must have {this} owner", child.Owner == this );
             Child.Detach( (TThis) this, argument );
             Child = null;
             callback?.Invoke( child );

@@ -39,7 +39,7 @@
         }
         internal void Detach(IStateful<TThis> owner, object? argument) {
             Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
-            Assert.Operation.Valid( $"State {this} must have owner", Owner == owner );
+            Assert.Operation.Valid( $"State {this} must have {owner} owner", Owner == owner );
             Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
             Deactivate( argument );
             {

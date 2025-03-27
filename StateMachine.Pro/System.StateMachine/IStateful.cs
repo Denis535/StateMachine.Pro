@@ -36,7 +36,7 @@ namespace System.StateMachine {
             Assert.Argument.NotNull( $"Argument 'stateful' must be non-null", stateful != null );
             Assert.Argument.NotNull( $"Argument 'state' must be non-null", state != null );
             Assert.Operation.Valid( $"Stateful {stateful} must have {state} state", stateful.State == state );
-            Assert.Operation.Valid( $"State {state} must have owner", state.Owner == stateful );
+            Assert.Operation.Valid( $"State {state} must have {stateful} owner", state.Owner == stateful );
             Assert.Operation.Valid( $"State {state} must be active", state.Activity == StateBase<T>.Activity_.Active );
             stateful.State.Detach( stateful, argument );
             stateful.State = null;
