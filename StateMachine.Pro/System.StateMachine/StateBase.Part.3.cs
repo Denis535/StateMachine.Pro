@@ -26,19 +26,34 @@
 
         // Attach
         internal void Attach(IStateful<TThis> owner, object? argument) {
+            Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
+            Assert.Operation.Valid( $"State {this} must have no owner", Owner == null );
             Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
-            AttachBase( owner, argument );
+            {
+                Owner = owner;
+                OnBeforeAttach( argument );
+                OnAttach( argument );
+                OnAfterAttach( argument );
+            }
             Activate( argument );
         }
         internal void Detach(IStateful<TThis> owner, object? argument) {
+            Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
+            Assert.Operation.Valid( $"State {this} must have owner", Owner == owner );
             Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
             Deactivate( argument );
-            DetachBase( owner, argument );
+            {
+                OnBeforeDetach( argument );
+                OnDetach( argument );
+                OnAfterDetach( argument );
+                Owner = null;
+            }
         }
 
         // Activate
         private void Activate(object? argument) {
             Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
+            Assert.Operation.Valid( $"State {this} must have owner with valid activity", (Owner is IStateful<TThis>) || ((StateBase<TThis>) Owner).Activity is Activity_.Active or Activity_.Activating );
             Assert.Operation.Valid( $"State {this} must be inactive", Activity is Activity_.Inactive );
             OnBeforeActivate( argument );
             Activity = Activity_.Activating;
@@ -50,6 +65,7 @@
         }
         private void Deactivate(object? argument) {
             Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
+            Assert.Operation.Valid( $"State {this} must have owner with valid activity", (Owner is IStateful<TThis>) || ((StateBase<TThis>) Owner).Activity is Activity_.Active or Activity_.Deactivating );
             Assert.Operation.Valid( $"State {this} must be active", Activity is Activity_.Active );
             OnBeforeDeactivate( argument );
             Activity = Activity_.Deactivating;

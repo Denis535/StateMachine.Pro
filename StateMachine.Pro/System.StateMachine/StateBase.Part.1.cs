@@ -20,22 +20,6 @@
         public StateBase() {
         }
 
-        // Attach
-        private void AttachBase(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Valid( $"State {this} must have no owner", Owner == null );
-            Owner = owner;
-            OnBeforeAttach( argument );
-            OnAttach( argument );
-            OnAfterAttach( argument );
-        }
-        private void DetachBase(IStateful<TThis> owner, object? argument) {
-            Assert.Operation.Valid( $"State {this} must have {owner} owner", Owner == owner );
-            OnBeforeDetach( argument );
-            OnDetach( argument );
-            OnAfterDetach( argument );
-            Owner = null;
-        }
-
         // OnAttach
         protected abstract void OnAttach(object? argument);
         protected virtual void OnBeforeAttach(object? argument) {

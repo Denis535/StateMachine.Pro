@@ -25,9 +25,6 @@ public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase
 
     public StateBase();
 
-    private void AttachBase(IStateful<TThis> owner, object? argument);
-    private void DetachBase(IStateful<TThis> owner, object? argument);
-
     protected abstract void OnAttach(object? argument);
     protected virtual void OnBeforeAttach(object? argument);
     protected virtual void OnAfterAttach(object? argument);
@@ -92,12 +89,6 @@ public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase
     public event Action<object?>? OnAfterDetachEvent;
 
     public StateBase();
-
-    private void AttachBase(IStateful<TThis> owner, object? argument);
-    private void DetachBase(IStateful<TThis> owner, object? argument);
-
-    private void AttachBase(TThis owner, object? argument);
-    private void DetachBase(TThis owner, object? argument);
 
     protected abstract void OnAttach(object? argument);
     protected virtual void OnBeforeAttach(object? argument);
