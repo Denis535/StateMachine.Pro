@@ -36,13 +36,17 @@ namespace System.StateMachine.Hierarchical {
                 this.OnAttach( argument );
                 this.OnAfterAttach( argument );
             }
-            this.Activate( argument );
+            {
+                this.Activate( argument );
+            }
         }
         internal void Detach(IStateful<TThis> owner, object? argument) {
             Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
             Assert.Operation.Valid( $"State {this} must have {owner} owner", this.Owner == owner );
             Assert.Operation.Valid( $"State {this} must be active", this.Activity is Activity_.Active );
-            this.Deactivate( argument );
+            {
+                this.Deactivate( argument );
+            }
             {
                 this.OnBeforeDetach( argument );
                 this.OnDetach( argument );
@@ -56,21 +60,15 @@ namespace System.StateMachine.Hierarchical {
             Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
             Assert.Operation.Valid( $"State {this} must have no owner", this.Owner == null );
             Assert.Operation.Valid( $"State {this} must be inactive", this.Activity is Activity_.Inactive );
+            {
+                this.Owner = owner;
+                this.OnBeforeAttach( argument );
+                this.OnAttach( argument );
+                this.OnAfterAttach( argument );
+            }
             if (owner.Activity is Activity_.Active) {
-                {
-                    this.Owner = owner;
-                    this.OnBeforeAttach( argument );
-                    this.OnAttach( argument );
-                    this.OnAfterAttach( argument );
-                }
                 this.Activate( argument );
             } else {
-                {
-                    this.Owner = owner;
-                    this.OnBeforeAttach( argument );
-                    this.OnAttach( argument );
-                    this.OnAfterAttach( argument );
-                }
             }
         }
         internal void Detach(TThis owner, object? argument) {
@@ -79,20 +77,14 @@ namespace System.StateMachine.Hierarchical {
             if (owner.Activity is Activity_.Active) {
                 Assert.Operation.Valid( $"State {this} must be active", this.Activity is Activity_.Active );
                 this.Deactivate( argument );
-                {
-                    this.OnBeforeDetach( argument );
-                    this.OnDetach( argument );
-                    this.OnAfterDetach( argument );
-                    this.Owner = null;
-                }
             } else {
                 Assert.Operation.Valid( $"State {this} must be inactive", this.Activity is Activity_.Inactive );
-                {
-                    this.OnBeforeDetach( argument );
-                    this.OnDetach( argument );
-                    this.OnAfterDetach( argument );
-                    this.Owner = null;
-                }
+            }
+            {
+                this.OnBeforeDetach( argument );
+                this.OnDetach( argument );
+                this.OnAfterDetach( argument );
+                this.Owner = null;
             }
         }
 

@@ -60,6 +60,11 @@ namespace System.StateMachine.Hierarchical {
         protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have {this} owner", child.Owner == this );
+            if (this.Activity == Activity_.Active) {
+                Assert.Argument.Valid( $"Argument 'child' ({child}) must be active", child.Activity == Activity_.Active );
+            } else {
+                Assert.Argument.Valid( $"Argument 'child' ({child}) must be inactive", child.Activity == Activity_.Inactive );
+            }
             Assert.Operation.Valid( $"State {this} must have {child} child", this.Child == child );
             this.Child.Detach( (TThis) this, argument );
             this.Child = null;
