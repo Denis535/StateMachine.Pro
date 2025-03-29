@@ -9,50 +9,50 @@ namespace System.StateMachine.Hierarchical {
         [Test]
         public void Test_00() {
             var stateful = new Stateful();
-            NUnit.Framework.Assert.That( stateful.State, Is.Null );
+            Assert.That( stateful.State, Is.Null );
 
             var a = new A();
-            NUnit.Framework.Assert.That( a.Stateful, Is.Null );
-            NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+            Assert.That( a.Stateful, Is.Null );
+            Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
 
             var b = new B();
-            NUnit.Framework.Assert.That( b.Stateful, Is.Null );
-            NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+            Assert.That( b.Stateful, Is.Null );
+            Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
 
             {
                 // SetState null
                 stateful.SetState( null, null, null );
-                NUnit.Framework.Assert.That( a.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
-                NUnit.Framework.Assert.That( b.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( a.Stateful, Is.Null );
+                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( b.Stateful, Is.Null );
+                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             }
             {
                 // SetState a
                 stateful.SetState( a, null, null );
-                NUnit.Framework.Assert.That( stateful.State, Is.EqualTo( a ) );
-                NUnit.Framework.Assert.That( a.Stateful, Is.EqualTo( stateful ) );
-                NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Active ) );
-                NUnit.Framework.Assert.That( b.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( stateful.State, Is.EqualTo( a ) );
+                Assert.That( a.Stateful, Is.EqualTo( stateful ) );
+                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Active ) );
+                Assert.That( b.Stateful, Is.Null );
+                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             }
             {
                 // SetState b
                 stateful.SetState( b, null, null );
-                NUnit.Framework.Assert.That( stateful.State, Is.EqualTo( b ) );
-                NUnit.Framework.Assert.That( a.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
-                NUnit.Framework.Assert.That( b.Stateful, Is.EqualTo( stateful ) );
-                NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Active ) );
+                Assert.That( stateful.State, Is.EqualTo( b ) );
+                Assert.That( a.Stateful, Is.Null );
+                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( b.Stateful, Is.EqualTo( stateful ) );
+                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Active ) );
             }
             {
                 // SetState null
                 stateful.SetState( null, null, null );
-                NUnit.Framework.Assert.That( stateful.State, Is.Null );
-                NUnit.Framework.Assert.That( a.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
-                NUnit.Framework.Assert.That( b.Stateful, Is.Null );
-                NUnit.Framework.Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( stateful.State, Is.Null );
+                Assert.That( a.Stateful, Is.Null );
+                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                Assert.That( b.Stateful, Is.Null );
+                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             }
         }
 

@@ -3,10 +3,10 @@
     using System.Collections.Generic;
     using System.Text;
 
-    internal class Stateful : IStateful<State> {
+    public class Stateful : IStateful<State> {
 
         // State
-        State? IStateful<State>.State { get => State; set => State = value; }
+        State? IStateful<State>.State { get => this.State; set => this.State = value; }
         public State? State { get; private set; }
 
         // Constructor

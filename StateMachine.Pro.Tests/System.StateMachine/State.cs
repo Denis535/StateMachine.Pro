@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Text;
 
-    internal class State : StateBase<State> {
+    public class State : StateBase<State> {
 
         //public bool IsDisposed { get; private set; }
 
@@ -25,10 +25,10 @@
 
         // OnActivate
         protected override void OnActivate(object? argument) {
-            Trace.WriteLine( "OnActivate: " + GetType().Name );
+            Trace.WriteLine( "OnActivate: " + this.GetType().Name );
         }
         protected override void OnDeactivate(object? argument) {
-            Trace.WriteLine( "OnDeactivate: " + GetType().Name );
+            Trace.WriteLine( "OnDeactivate: " + this.GetType().Name );
         }
 
     }

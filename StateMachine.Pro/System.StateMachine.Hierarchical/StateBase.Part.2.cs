@@ -8,32 +8,32 @@
     public abstract partial class StateBase<TThis> {
 
         // Root
-        [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot => Parent == null;
-        public TThis Root => Parent?.Root ?? (TThis) this;
+        [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot => this.Parent == null;
+        public TThis Root => this.Parent?.Root ?? (TThis) this;
 
         // Parent
-        public TThis? Parent => Owner as TThis;
+        public TThis? Parent => this.Owner as TThis;
         public IEnumerable<TThis> Ancestors {
             get {
-                if (Parent != null) {
-                    yield return Parent;
-                    foreach (var i in Parent.Ancestors) yield return i;
+                if (this.Parent != null) {
+                    yield return this.Parent;
+                    foreach (var i in this.Parent.Ancestors) yield return i;
                 }
             }
         }
-        public IEnumerable<TThis> AncestorsAndSelf => Ancestors.Prepend( (TThis) this );
+        public IEnumerable<TThis> AncestorsAndSelf => this.Ancestors.Prepend( (TThis) this );
 
         // Child
         public TThis? Child { get; private set; }
         public IEnumerable<TThis> Descendants {
             get {
-                if (Child != null) {
-                    yield return Child;
-                    foreach (var i in Child.Descendants) yield return i;
+                if (this.Child != null) {
+                    yield return this.Child;
+                    foreach (var i in this.Child.Descendants) yield return i;
                 }
             }
         }
-        public IEnumerable<TThis> DescendantsAndSelf => Descendants.Prepend( (TThis) this );
+        public IEnumerable<TThis> DescendantsAndSelf => this.Descendants.Prepend( (TThis) this );
 
         // Constructor
         //public StateBase() {
@@ -41,35 +41,35 @@
 
         // SetChild
         protected void SetChild(TThis? child, object? argument, Action<TThis>? callback) {
-            if (Child != null) {
-                RemoveChild( Child, argument, callback );
+            if (this.Child != null) {
+                this.RemoveChild( this.Child, argument, callback );
             }
             if (child != null) {
-                AddChild( child, argument );
+                this.AddChild( child, argument );
             }
         }
         protected void AddChild(TThis child, object? argument) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have no owner", child.Owner == null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must be inactive", child.Activity == Activity_.Inactive );
-            Assert.Operation.Valid( $"State {this} must have no child", Child == null );
-            Child = child;
-            Child.Attach( (TThis) this, argument );
+            Assert.Operation.Valid( $"State {this} must have no child", this.Child == null );
+            this.Child = child;
+            this.Child.Attach( (TThis) this, argument );
         }
         protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have {this} owner", child.Owner == this );
-            Assert.Operation.Valid( $"State {this} must have {child} child", Child == child );
-            Child.Detach( (TThis) this, argument );
-            Child = null;
+            Assert.Operation.Valid( $"State {this} must have {child} child", this.Child == child );
+            this.Child.Detach( (TThis) this, argument );
+            this.Child = null;
             callback?.Invoke( child );
         }
         protected void RemoveSelf(object? argument, Action<TThis>? callback) {
-            Assert.Operation.Valid( $"State {this} must have owner", Owner != null );
-            if (Parent != null) {
-                Parent.RemoveChild( (TThis) this, argument, callback );
+            Assert.Operation.Valid( $"State {this} must have owner", this.Owner != null );
+            if (this.Parent != null) {
+                this.Parent.RemoveChild( (TThis) this, argument, callback );
             } else {
-                Stateful!.RemoveState( (TThis) this, argument, callback );
+                this.Stateful!.RemoveState( (TThis) this, argument, callback );
             }
         }
 

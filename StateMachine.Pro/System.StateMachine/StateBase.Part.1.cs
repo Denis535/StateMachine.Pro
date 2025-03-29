@@ -8,7 +8,7 @@
         // Owner
         internal IStateful<TThis>? Owner { get; private set; }
         // Stateful
-        public IStateful<TThis>? Stateful => Owner;
+        public IStateful<TThis>? Stateful => this.Owner;
 
         // OnAttach
         public event Action<object?>? OnBeforeAttachEvent;
@@ -23,19 +23,19 @@
         // OnAttach
         protected abstract void OnAttach(object? argument);
         protected virtual void OnBeforeAttach(object? argument) {
-            OnBeforeAttachEvent?.Invoke( argument );
+            this.OnBeforeAttachEvent?.Invoke( argument );
         }
         protected virtual void OnAfterAttach(object? argument) {
-            OnAfterAttachEvent?.Invoke( argument );
+            this.OnAfterAttachEvent?.Invoke( argument );
         }
 
         // OnDetach
         protected abstract void OnDetach(object? argument);
         protected virtual void OnBeforeDetach(object? argument) {
-            OnBeforeDetachEvent?.Invoke( argument );
+            this.OnBeforeDetachEvent?.Invoke( argument );
         }
         protected virtual void OnAfterDetach(object? argument) {
-            OnAfterDetachEvent?.Invoke( argument );
+            this.OnAfterDetachEvent?.Invoke( argument );
         }
 
     }
