@@ -32,4 +32,8 @@
         }
 
     }
+    public class A : State {
+    }
+    public class B : State {
+    }
 }
