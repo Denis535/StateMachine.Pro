@@ -1,3 +1,4 @@
+#nullable enable
 namespace System.StateMachine {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,5 @@
-﻿namespace System {
+﻿#nullable enable
+namespace System {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

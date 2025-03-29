@@ -1,4 +1,5 @@
-﻿namespace System.StateMachine.Hierarchical {
+﻿#nullable enable
+namespace System.StateMachine.Hierarchical {
     using System;
     using System.Collections.Generic;
     using System.Text;
