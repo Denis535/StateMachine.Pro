@@ -15,7 +15,7 @@ public interface IStateful<T> where T :  notnull, StateBase<T> {
 }
 public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
 
-    private IStateful<TThis>? Owner { get; set; }
+    internal IStateful<TThis>? Owner { get; private set; }
     public IStateful<TThis>? Stateful { get; }
 
     public event Action<object?>? OnBeforeAttachEvent;
@@ -24,6 +24,9 @@ public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase
     public event Action<object?>? OnAfterDetachEvent;
 
     public StateBase();
+
+    internal void Attach(IStateful<TThis> owner, object? argument);
+    internal void Detach(IStateful<TThis> owner, object? argument);
 
     protected abstract void OnAttach(object? argument);
     protected virtual void OnBeforeAttach(object? argument);
@@ -51,9 +54,6 @@ public abstract partial class StateBase<TThis> {
 
     //public StateBase();
 
-    internal void Attach(IStateful<TThis> owner, object? argument);
-    internal void Detach(IStateful<TThis> owner, object? argument);
-
     private void Activate(object? argument);
     private void Deactivate(object? argument);
 
@@ -80,7 +80,7 @@ public interface IStateful<T> where T :  notnull, StateBase<T> {
 }
 public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
 
-    private object? Owner { get; set; }
+    internal IStateful<TThis>? Owner { get; private set; }
     public IStateful<TThis>? Stateful { get; }
 
     public event Action<object?>? OnBeforeAttachEvent;
@@ -89,6 +89,12 @@ public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase
     public event Action<object?>? OnAfterDetachEvent;
 
     public StateBase();
+
+    internal void Attach(IStateful<TThis> owner, object? argument);
+    internal void Detach(IStateful<TThis> owner, object? argument);
+
+    internal void Attach(TThis owner, object? argument);
+    internal void Detach(TThis owner, object? argument);
 
     protected abstract void OnAttach(object? argument);
     protected virtual void OnBeforeAttach(object? argument);
@@ -136,9 +142,6 @@ public abstract partial class StateBase<TThis> {
     public event Action<object?>? OnAfterDeactivateEvent;
 
     //public StateBase();
-
-    internal void Attach(IStateful<TThis> owner, object? argument);
-    internal void Detach(IStateful<TThis> owner, object? argument);
 
     private void Activate(object? argument);
     private void Deactivate(object? argument);

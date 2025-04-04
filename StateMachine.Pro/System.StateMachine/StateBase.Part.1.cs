@@ -21,6 +21,32 @@ namespace System.StateMachine {
         public StateBase() {
         }
 
+        // Attach
+        internal void Attach(IStateful<TThis> owner, object? argument) {
+            Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
+            Assert.Operation.Valid( $"State {this} must have no owner", this.Owner == null );
+            Assert.Operation.Valid( $"State {this} must be inactive", this.Activity is Activity_.Inactive );
+            {
+                this.Owner = owner;
+                this.OnBeforeAttach( argument );
+                this.OnAttach( argument );
+                this.OnAfterAttach( argument );
+            }
+            this.Activate( argument );
+        }
+        internal void Detach(IStateful<TThis> owner, object? argument) {
+            Assert.Argument.NotNull( $"Argument 'owner' must be non-null", owner != null );
+            Assert.Operation.Valid( $"State {this} must have {owner} owner", this.Owner == owner );
+            Assert.Operation.Valid( $"State {this} must be active", this.Activity is Activity_.Active );
+            this.Deactivate( argument );
+            {
+                this.OnBeforeDetach( argument );
+                this.OnDetach( argument );
+                this.OnAfterDetach( argument );
+                this.Owner = null;
+            }
+        }
+
         // OnAttach
         protected abstract void OnAttach(object? argument);
         protected virtual void OnBeforeAttach(object? argument) {
