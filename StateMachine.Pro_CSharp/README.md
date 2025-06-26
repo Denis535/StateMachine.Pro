@@ -4,29 +4,37 @@ The library that allows you to easily implement a stateful object.
 # Reference
 ```
 namespace System.StateMachine;
-public interface IStateful<T> where T :  notnull, StateBase<T> {
+public interface IStateful<T> where T : notnull, StateBase<T> {
 
     protected T? State { get; set; }
 
-    protected void SetState(T? state, object? argument, Action<T>? callback);
+    protected void SetState(T? state, object? argument, Action<T, object?>? callback);
     protected void AddState(T state, object? argument);
-    protected void RemoveState(T state, object? argument, Action<T>? callback);
+    protected void RemoveState(T state, object? argument, Action<T, object?>? callback);
+    protected void RemoveState(object? argument, Action<T, object?>? callback);
 
 }
-public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
+public abstract partial class StateBase<TThis> where TThis : notnull, StateBase<TThis> {
+    public enum Activity_ {
+        Inactive,
+        Activating,
+        Active,
+        Deactivating,
+    }
 
-    internal IStateful<TThis>? Owner { get; private set; }
     public IStateful<TThis>? Stateful { get; }
 
-    public event Action<object?>? OnBeforeAttachEvent;
-    public event Action<object?>? OnAfterAttachEvent;
-    public event Action<object?>? OnBeforeDetachEvent;
-    public event Action<object?>? OnAfterDetachEvent;
+    public Activity_ Activity { get; }
 
     public StateBase();
 
-    internal void Attach(IStateful<TThis> owner, object? argument);
-    internal void Detach(IStateful<TThis> owner, object? argument);
+}
+public abstract partial class StateBase<TThis> {
+
+    public event Action<object?>? OnBeforeAttachCallback;
+    public event Action<object?>? OnAfterAttachCallback;
+    public event Action<object?>? OnBeforeDetachCallback;
+    public event Action<object?>? OnAfterDetachCallback;
 
     protected abstract void OnAttach(object? argument);
     protected virtual void OnBeforeAttach(object? argument);
@@ -38,24 +46,11 @@ public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase
 
 }
 public abstract partial class StateBase<TThis> {
-    public enum Activity_ {
-        Inactive,
-        Activating,
-        Active,
-        Deactivating,
-    }
 
-    public Activity_ Activity { get; private set; }
-
-    public event Action<object?>? OnBeforeActivateEvent;
-    public event Action<object?>? OnAfterActivateEvent;
-    public event Action<object?>? OnBeforeDeactivateEvent;
-    public event Action<object?>? OnAfterDeactivateEvent;
-
-    //public StateBase();
-
-    private void Activate(object? argument);
-    private void Deactivate(object? argument);
+    public event Action<object?>? OnBeforeActivateCallback;
+    public event Action<object?>? OnAfterActivateCallback;
+    public event Action<object?>? OnBeforeDeactivateCallback;
+    public event Action<object?>? OnAfterDeactivateCallback;
 
     protected abstract void OnActivate(object? argument);
     protected virtual void OnBeforeActivate(object? argument);
@@ -67,84 +62,68 @@ public abstract partial class StateBase<TThis> {
 
 }
 ```
+
+# Reference (Hierarchical)
 ```
 namespace System.StateMachine.Hierarchical;
-public interface IStateful<T> where T :  notnull, StateBase<T> {
+public interface IStateful<T> where T : notnull, StateBase<T> {
 
     protected T? State { get; set; }
 
-    protected void SetState(T? state, object? argument, Action<T>? callback);
+    protected void SetState(T? state, object? argument, Action<T, object?>? callback);
     protected void AddState(T state, object? argument);
-    protected internal void RemoveState(T state, object? argument, Action<T>? callback);
+    protected void RemoveState(T state, object? argument, Action<T, object?>? callback);
+    protected void RemoveState(object? argument, Action<T, object?>? callback);
 
 }
-public abstract partial class StateBase<TThis> where TThis :  notnull, StateBase<TThis> {
+public abstract partial class StateBase<TThis> where TThis : notnull, StateBase<TThis> {
+    public enum Activity_ {
+        Inactive,
+        Activating,
+        Active,
+        Deactivating,
+    }
 
-    internal IStateful<TThis>? Owner { get; private set; }
     public IStateful<TThis>? Stateful { get; }
 
-    public event Action<object?>? OnBeforeAttachEvent;
-    public event Action<object?>? OnAfterAttachEvent;
-    public event Action<object?>? OnBeforeDetachEvent;
-    public event Action<object?>? OnAfterDetachEvent;
-
-    public StateBase();
-
-    internal void Attach(IStateful<TThis> owner, object? argument);
-    internal void Detach(IStateful<TThis> owner, object? argument);
-
-    internal void Attach(TThis owner, object? argument);
-    internal void Detach(TThis owner, object? argument);
-
-    protected abstract void OnAttach(object? argument);
-    protected virtual void OnBeforeAttach(object? argument);
-    protected virtual void OnAfterAttach(object? argument);
-
-    protected abstract void OnDetach(object? argument);
-    protected virtual void OnBeforeDetach(object? argument);
-    protected virtual void OnAfterDetach(object? argument);
-
-}
-public abstract partial class StateBase<TThis> {
-
-    [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot { get; }
+    public bool IsRoot { get; }
     public TThis Root { get; }
 
     public TThis? Parent { get; }
     public IEnumerable<TThis> Ancestors { get; }
     public IEnumerable<TThis> AncestorsAndSelf { get; }
 
-    public TThis? Child { get; private set; }
+    public Activity_ Activity { get; }
+
+    public TThis? Child { get; }
     public IEnumerable<TThis> Descendants { get; }
     public IEnumerable<TThis> DescendantsAndSelf { get; }
 
-    //public StateBase();
-
-    protected void SetChild(TThis? child, object? argument, Action<TThis>? callback);
-    protected void AddChild(TThis child, object? argument);
-    protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback);
-    protected void RemoveSelf(object? argument, Action<TThis>? callback);
+    public StateBase();
 
 }
 public abstract partial class StateBase<TThis> {
-    public enum Activity_ {
-        Inactive,
-        Activating,
-        Active,
-        Deactivating,
-    }
 
-    public Activity_ Activity { get; private set; }
+    public event Action<object?>? OnBeforeAttachCallback;
+    public event Action<object?>? OnAfterAttachCallback;
+    public event Action<object?>? OnBeforeDetachCallback;
+    public event Action<object?>? OnAfterDetachCallback;
 
-    public event Action<object?>? OnBeforeActivateEvent;
-    public event Action<object?>? OnAfterActivateEvent;
-    public event Action<object?>? OnBeforeDeactivateEvent;
-    public event Action<object?>? OnAfterDeactivateEvent;
+    protected abstract void OnAttach(object? argument);
+    protected virtual void OnBeforeAttach(object? argument);
+    protected virtual void OnAfterAttach(object? argument);
 
-    //public StateBase();
+    protected abstract void OnDetach(object? argument);
+    protected virtual void OnBeforeDetach(object? argument);
+    protected virtual void OnAfterDetach(object? argument);
 
-    private void Activate(object? argument);
-    private void Deactivate(object? argument);
+}
+public abstract partial class StateBase<TThis> {
+
+    public event Action<object?>? OnBeforeActivateCallback;
+    public event Action<object?>? OnAfterActivateCallback;
+    public event Action<object?>? OnBeforeDeactivateCallback;
+    public event Action<object?>? OnAfterDeactivateCallback;
 
     protected abstract void OnActivate(object? argument);
     protected virtual void OnBeforeActivate(object? argument);
@@ -153,6 +132,15 @@ public abstract partial class StateBase<TThis> {
     protected abstract void OnDeactivate(object? argument);
     protected virtual void OnBeforeDeactivate(object? argument);
     protected virtual void OnAfterDeactivate(object? argument);
+
+}
+public abstract partial class StateBase<TThis> {
+
+    protected void SetChild(TThis? child, object? argument, Action<TThis, object?>? callback);
+    protected virtual void AddChild(TThis child, object? argument);
+    protected virtual void RemoveChild(TThis child, object? argument, Action<TThis, object?>? callback);
+    protected void RemoveChild(object? argument, Action<TThis, object?>? callback);
+    protected void RemoveSelf(object? argument, Action<TThis, object?>? callback);
 
 }
 ```
