@@ -10,13 +10,13 @@ namespace System.StateMachine {
         protected T? State { get; set; }
 
         // SetState
-        protected void SetState(T? state, object? argument, Action<T>? callback);
+        protected void SetState(T? state, object? argument, Action<T, object?>? callback);
         protected void AddState(T state, object? argument);
-        protected void RemoveState(T state, object? argument, Action<T>? callback);
-        protected void RemoveState(object? argument, Action<T>? callback);
+        protected void RemoveState(T state, object? argument, Action<T, object?>? callback);
+        protected void RemoveState(object? argument, Action<T, object?>? callback);
 
         // Helpers
-        protected static void SetState(IStateful<T> stateful, T? state, object? argument, Action<T>? callback) {
+        protected static void SetState(IStateful<T> stateful, T? state, object? argument, Action<T, object?>? callback) {
             Assert.Argument.NotNull( $"Argument 'stateful' must be non-null", stateful != null );
             if (stateful.State != null) {
                 stateful.RemoveState( stateful.State, argument, callback );
@@ -34,7 +34,7 @@ namespace System.StateMachine {
             stateful.State = state;
             stateful.State.Attach( stateful, argument );
         }
-        protected static void RemoveState(IStateful<T> stateful, T state, object? argument, Action<T>? callback) {
+        protected static void RemoveState(IStateful<T> stateful, T state, object? argument, Action<T, object?>? callback) {
             Assert.Argument.NotNull( $"Argument 'stateful' must be non-null", stateful != null );
             Assert.Argument.Valid( $"Argument 'stateful' ({stateful}) must have {state} state", stateful.State == state );
             Assert.Argument.NotNull( $"Argument 'state' must be non-null", state != null );
@@ -42,9 +42,9 @@ namespace System.StateMachine {
             Assert.Argument.Valid( $"Argument 'state' ({state}) must be active", state.Activity == StateBase<T>.Activity_.Active );
             stateful.State.Detach( stateful, argument );
             stateful.State = null;
-            callback?.Invoke( state );
+            callback?.Invoke( state, argument );
         }
-        protected static void RemoveState(IStateful<T> stateful, object? argument, Action<T>? callback) {
+        protected static void RemoveState(IStateful<T> stateful, object? argument, Action<T, object?>? callback) {
             Assert.Argument.NotNull( $"Argument 'stateful' must be non-null", stateful != null );
             Assert.Argument.Valid( $"Argument 'stateful' ({stateful}) must have state", stateful.State != null );
             stateful.RemoveState( stateful.State, argument, callback );

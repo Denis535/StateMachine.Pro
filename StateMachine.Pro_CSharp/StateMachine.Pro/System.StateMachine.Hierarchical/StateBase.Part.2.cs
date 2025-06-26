@@ -41,7 +41,7 @@ namespace System.StateMachine.Hierarchical {
         //}
 
         // SetChild
-        protected void SetChild(TThis? child, object? argument, Action<TThis>? callback) {
+        protected void SetChild(TThis? child, object? argument, Action<TThis, object?>? callback) {
             if (this.Child != null) {
                 this.RemoveChild( this.Child, argument, callback );
             }
@@ -57,7 +57,7 @@ namespace System.StateMachine.Hierarchical {
             this.Child = child;
             this.Child.Attach( (TThis) this, argument );
         }
-        protected virtual void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
+        protected virtual void RemoveChild(TThis child, object? argument, Action<TThis, object?>? callback) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have {this} owner", child.Owner == this );
             if (this.Activity == Activity_.Active) {
@@ -68,13 +68,13 @@ namespace System.StateMachine.Hierarchical {
             Assert.Operation.Valid( $"State {this} must have {child} child", this.Child == child );
             this.Child.Detach( (TThis) this, argument );
             this.Child = null;
-            callback?.Invoke( child );
+            callback?.Invoke( child, argument );
         }
-        protected void RemoveChild(object? argument, Action<TThis>? callback) {
+        protected void RemoveChild(object? argument, Action<TThis, object?>? callback) {
             Assert.Operation.Valid( $"State {this} must have child", this.Child != null );
             this.RemoveChild( this.Child, argument, callback );
         }
-        protected void RemoveSelf(object? argument, Action<TThis>? callback) {
+        protected void RemoveSelf(object? argument, Action<TThis, object?>? callback) {
             if (this.Parent != null) {
                 this.Parent.RemoveChild( (TThis) this, argument, callback );
             } else {

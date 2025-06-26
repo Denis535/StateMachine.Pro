@@ -16,10 +16,10 @@ namespace System.StateMachine.Hierarchical {
         public Activity_ Activity { get; private set; } = Activity_.Inactive;
 
         // OnActivate
-        public event Action<object?>? OnBeforeActivateEvent;
-        public event Action<object?>? OnAfterActivateEvent;
-        public event Action<object?>? OnBeforeDeactivateEvent;
-        public event Action<object?>? OnAfterDeactivateEvent;
+        public event Action<object?>? OnBeforeActivateCallback;
+        public event Action<object?>? OnAfterActivateCallback;
+        public event Action<object?>? OnBeforeDeactivateCallback;
+        public event Action<object?>? OnAfterDeactivateCallback;
 
         // Constructor
         //public StateBase() {
@@ -60,19 +60,19 @@ namespace System.StateMachine.Hierarchical {
         // OnActivate
         protected abstract void OnActivate(object? argument);
         protected virtual void OnBeforeActivate(object? argument) {
-            this.OnBeforeActivateEvent?.Invoke( argument );
+            this.OnBeforeActivateCallback?.Invoke( argument );
         }
         protected virtual void OnAfterActivate(object? argument) {
-            this.OnAfterActivateEvent?.Invoke( argument );
+            this.OnAfterActivateCallback?.Invoke( argument );
         }
 
         // OnDeactivate
         protected abstract void OnDeactivate(object? argument);
         protected virtual void OnBeforeDeactivate(object? argument) {
-            this.OnBeforeDeactivateEvent?.Invoke( argument );
+            this.OnBeforeDeactivateCallback?.Invoke( argument );
         }
         protected virtual void OnAfterDeactivate(object? argument) {
-            this.OnAfterDeactivateEvent?.Invoke( argument );
+            this.OnAfterDeactivateCallback?.Invoke( argument );
         }
 
     }

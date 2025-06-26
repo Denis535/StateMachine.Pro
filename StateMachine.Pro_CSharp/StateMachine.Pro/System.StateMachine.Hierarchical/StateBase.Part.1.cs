@@ -13,10 +13,10 @@ namespace System.StateMachine.Hierarchical {
         internal IStateful<TThis>? Stateful_NoRecursive => this.Owner as IStateful<TThis>;
 
         // OnAttach
-        public event Action<object?>? OnBeforeAttachEvent;
-        public event Action<object?>? OnAfterAttachEvent;
-        public event Action<object?>? OnBeforeDetachEvent;
-        public event Action<object?>? OnAfterDetachEvent;
+        public event Action<object?>? OnBeforeAttachCallback;
+        public event Action<object?>? OnAfterAttachCallback;
+        public event Action<object?>? OnBeforeDetachCallback;
+        public event Action<object?>? OnAfterDetachCallback;
 
         // Constructor
         public StateBase() {
@@ -88,19 +88,19 @@ namespace System.StateMachine.Hierarchical {
         // OnAttach
         protected abstract void OnAttach(object? argument);
         protected virtual void OnBeforeAttach(object? argument) {
-            this.OnBeforeAttachEvent?.Invoke( argument );
+            this.OnBeforeAttachCallback?.Invoke( argument );
         }
         protected virtual void OnAfterAttach(object? argument) {
-            this.OnAfterAttachEvent?.Invoke( argument );
+            this.OnAfterAttachCallback?.Invoke( argument );
         }
 
         // OnDetach
         protected abstract void OnDetach(object? argument);
         protected virtual void OnBeforeDetach(object? argument) {
-            this.OnBeforeDetachEvent?.Invoke( argument );
+            this.OnBeforeDetachCallback?.Invoke( argument );
         }
         protected virtual void OnAfterDetach(object? argument) {
-            this.OnAfterDetachEvent?.Invoke( argument );
+            this.OnAfterDetachCallback?.Invoke( argument );
         }
 
     }
