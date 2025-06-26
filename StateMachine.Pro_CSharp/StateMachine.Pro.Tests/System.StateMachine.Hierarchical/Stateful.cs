@@ -23,6 +23,9 @@
         public void RemoveState(State state, object? argument, Action<State>? callback) {
             IStateful<State>.RemoveState( this, state, argument, callback );
         }
+        public void RemoveState(object? argument, Action<State>? callback) {
+            IStateful<State>.RemoveState( this, argument, callback );
+        }
 
     }
 }

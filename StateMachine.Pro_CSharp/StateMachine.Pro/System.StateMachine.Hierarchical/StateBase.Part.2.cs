@@ -49,7 +49,7 @@ namespace System.StateMachine.Hierarchical {
                 this.AddChild( child, argument );
             }
         }
-        protected void AddChild(TThis child, object? argument) {
+        protected virtual void AddChild(TThis child, object? argument) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have no owner", child.Owner == null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must be inactive", child.Activity == Activity_.Inactive );
@@ -57,7 +57,7 @@ namespace System.StateMachine.Hierarchical {
             this.Child = child;
             this.Child.Attach( (TThis) this, argument );
         }
-        protected void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
+        protected virtual void RemoveChild(TThis child, object? argument, Action<TThis>? callback) {
             Assert.Argument.NotNull( $"Argument 'child' must be non-null", child != null );
             Assert.Argument.Valid( $"Argument 'child' ({child}) must have {this} owner", child.Owner == this );
             if (this.Activity == Activity_.Active) {
@@ -70,12 +70,16 @@ namespace System.StateMachine.Hierarchical {
             this.Child = null;
             callback?.Invoke( child );
         }
+        protected void RemoveChild(object? argument, Action<TThis>? callback) {
+            Assert.Operation.Valid( $"State {this} must have child", this.Child != null );
+            this.RemoveChild( this.Child, argument, callback );
+        }
         protected void RemoveSelf(object? argument, Action<TThis>? callback) {
-            Assert.Operation.Valid( $"State {this} must have owner", this.Owner != null );
             if (this.Parent != null) {
                 this.Parent.RemoveChild( (TThis) this, argument, callback );
             } else {
-                this.Stateful!.RemoveState( (TThis) this, argument, callback );
+                Assert.Operation.Valid( $"State {this} must have stateful", this.Stateful_NoRecursive != null );
+                this.Stateful_NoRecursive.RemoveState( (TThis) this, argument, callback );
             }
         }
 

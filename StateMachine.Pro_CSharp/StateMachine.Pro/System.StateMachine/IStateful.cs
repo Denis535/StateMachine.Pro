@@ -13,6 +13,7 @@ namespace System.StateMachine {
         protected void SetState(T? state, object? argument, Action<T>? callback);
         protected void AddState(T state, object? argument);
         protected void RemoveState(T state, object? argument, Action<T>? callback);
+        protected void RemoveState(object? argument, Action<T>? callback);
 
         // Helpers
         protected static void SetState(IStateful<T> stateful, T? state, object? argument, Action<T>? callback) {
@@ -42,6 +43,11 @@ namespace System.StateMachine {
             stateful.State.Detach( stateful, argument );
             stateful.State = null;
             callback?.Invoke( state );
+        }
+        protected static void RemoveState(IStateful<T> stateful, object? argument, Action<T>? callback) {
+            Assert.Argument.NotNull( $"Argument 'stateful' must be non-null", stateful != null );
+            Assert.Argument.Valid( $"Argument 'stateful' ({stateful}) must have state", stateful.State != null );
+            stateful.RemoveState( stateful.State, argument, callback );
         }
 
     }

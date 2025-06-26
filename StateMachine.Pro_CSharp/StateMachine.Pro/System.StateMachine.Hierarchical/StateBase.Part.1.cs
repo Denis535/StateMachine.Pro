@@ -10,6 +10,7 @@ namespace System.StateMachine.Hierarchical {
         internal object? Owner { get; private set; }
         // Stateful
         public IStateful<TThis>? Stateful => (this.Owner as IStateful<TThis>) ?? (this.Owner as StateBase<TThis>)?.Stateful;
+        internal IStateful<TThis>? Stateful_NoRecursive => this.Owner as IStateful<TThis>;
 
         // OnAttach
         public event Action<object?>? OnBeforeAttachEvent;
