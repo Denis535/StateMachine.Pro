@@ -18,7 +18,7 @@ namespace System.StateMachine.Hierarchical {
         private object? Owner { get; set; }
         // Stateful
         public IStateful<TThis>? Stateful => (this.Owner as IStateful<TThis>) ?? (this.Owner as StateBase<TThis>)?.Stateful;
-        internal IStateful<TThis>? Stateful_NoRecursive => this.Owner as IStateful<TThis>;
+        private IStateful<TThis>? Stateful_NoRecursive => this.Owner as IStateful<TThis>;
 
         // Root
         [MemberNotNullWhen( false, nameof( Parent ) )] public bool IsRoot => this.Parent == null;

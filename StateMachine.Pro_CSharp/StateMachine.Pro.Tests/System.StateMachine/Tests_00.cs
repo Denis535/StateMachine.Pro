@@ -12,7 +12,6 @@ namespace System.StateMachine {
             var stateful = new Stateful();
             var a = new A();
             var b = new B();
-
             {
                 // SetState a
                 stateful.SetState( a, null, null );
@@ -25,15 +24,15 @@ namespace System.StateMachine {
                 Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             }
             {
-                // SetState b
-                stateful.SetState( b, null, null );
-                Assert.That( stateful.State, Is.EqualTo( b ) )
-                ;
-                Assert.That( a.Stateful, Is.Null );
-                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Inactive ) );
+                // SetState a
+                stateful.SetState( a, null, null );
+                Assert.That( stateful.State, Is.EqualTo( a ) );
 
-                Assert.That( b.Stateful, Is.EqualTo( stateful ) );
-                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Active ) );
+                Assert.That( a.Stateful, Is.EqualTo( stateful ) );
+                Assert.That( a.Activity, Is.EqualTo( State.Activity_.Active ) );
+
+                Assert.That( b.Stateful, Is.Null );
+                Assert.That( b.Activity, Is.EqualTo( State.Activity_.Inactive ) );
             }
             {
                 // SetState b
